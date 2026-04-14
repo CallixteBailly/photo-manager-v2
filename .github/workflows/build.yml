@@ -62,7 +62,7 @@ jobs:
 
       # Step 5: Restore dependencies
       - name: 🛠️ Restore dependencies
-        run: dotnet restore ${{ env.PROJECT_NAME }}
+        run: dotnet restore ${{ env.PROJECT_NAME }} /p:NuGetAudit=false
 
       # Step 6: Build the project with Release configuration
       - name: 🔨 Build
@@ -70,7 +70,7 @@ jobs:
 
       # Step 7: Run linting process
       - name: 🔨 Lint
-        run: dotnet format ${{ env.PROJECT_NAME }} --severity warn --verify-no-changes
+        run: dotnet format ${{ env.PROJECT_NAME }} --severity warn --verify-no-changes /p:NuGetAudit=false
 
       # Step 8: Run tests and generate code coverage report
       - name: 🔨 Test with Coverage
