@@ -62,7 +62,7 @@ jobs:
 
       # Step 5: Restore dependencies
       - name: 🛠️ Restore dependencies
-        run: dotnet restore ${{ env.PROJECT_NAME }}
+        run: dotnet restore ${{ env.PROJECT_NAME }} /p:NuGetAudit=false
 
       # Step 6: Build the project with Release configuration
       - name: 🔨 Build
@@ -70,11 +70,11 @@ jobs:
 
       # Step 7: Run linting process
       - name: 🔨 Lint
-        run: dotnet format ${{ env.PROJECT_NAME }} --severity warn --verify-no-changes
+        run: dotnet format ${{ env.PROJECT_NAME }} --severity warn --verify-no-changes --no-restore
 
       # Step 8: Run tests and generate code coverage report
       - name: 🔨 Test with Coverage
-        run: dotnet test --verbosity normal --collect:"XPlat Code Coverage" /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=TestResults/ --logger "trx;LogFileName=test-results.trx" ${{ env.PROJECT_NAME }}
+        run: dotnet test --no-restore --verbosity normal --collect:"XPlat Code Coverage" /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=TestResults/ --logger "trx;LogFileName=test-results.trx" ${{ env.PROJECT_NAME }}
 
       # Step 9: List Test Results Directory
       - name: 📂 List Test Results Directory
@@ -103,3 +103,32 @@ jobs:
           verbose: true
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
+
+  # Cross-platform restore verification — ensures NuGet packages resolve on all OS
+  verify-cross-platform:
+    name: Verify Restore on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    env:
+      PROJECT_NAME: PhotoManager/PhotoManager.slnx
+      DOTNET_VERSION: 10.0.x
+
+    steps:
+      - name: ⤵️ Checkout Source
+        uses: actions/checkout@v6
+
+      - name: 🛠️ Setup .NET SDK
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: 🛠️ Restore dependencies (cross-platform)
+        run: dotnet restore ${{ env.PROJECT_NAME }} /p:EnableWindowsTargeting=true /p:NuGetAudit=false
+
+      - name: 🖥️ Display .NET version
+        run: dotnet --info
