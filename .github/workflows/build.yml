@@ -67,11 +67,11 @@ jobs:
 
       # Step 5: Restore dependencies
       - name: 🛠️ Restore dependencies
-        run: dotnet restore ${{ env.PROJECT_NAME }}
+        run: dotnet restore ${{ env.PROJECT_NAME }} /p:EnableWindowsTargeting=true
 
       # Step 6: Build the project with Release configuration
       - name: 🔨 Build
-        run: dotnet build --no-restore --configuration Release ${{ env.PROJECT_NAME }}
+        run: dotnet build --no-restore --configuration Release ${{ env.PROJECT_NAME }} /p:EnableWindowsTargeting=true
 
       # Step 7: Run linting process (Windows only)
       - name: 🔨 Lint
