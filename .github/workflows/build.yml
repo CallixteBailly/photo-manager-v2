@@ -9,9 +9,13 @@ on:
       - "*"
 
 jobs:
-  build-windows:
-    name: Windows Build
-    runs-on: windows-latest
+  build:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
 
     env:
       PROJECT_NAME: PhotoManager/PhotoManager.slnx
@@ -29,8 +33,9 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      # Step 2A: Install HEIC/HEVC Support
+      # Step 2A: Install HEIC/HEVC Support (Windows only)
       - name: 🛠️ Install HEIC/HEVC Support
+        if: runner.os == 'Windows'
         shell: powershell
         run: |
           Write-Host "Installing HEIF Image Extensions..."
@@ -68,34 +73,40 @@ jobs:
       - name: 🔨 Build
         run: dotnet build --no-restore --configuration Release ${{ env.PROJECT_NAME }}
 
-      # Step 7: Run linting process
+      # Step 7: Run linting process (Windows only)
       - name: 🔨 Lint
+        if: runner.os == 'Windows'
         run: dotnet format ${{ env.PROJECT_NAME }} --severity warn --verify-no-changes
 
-      # Step 8: Run tests and generate code coverage report
+      # Step 8: Run tests and generate code coverage report (Windows only)
       - name: 🔨 Test with Coverage
+        if: runner.os == 'Windows'
         run: dotnet test --verbosity normal --collect:"XPlat Code Coverage" /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=TestResults/ --logger "trx;LogFileName=test-results.trx" ${{ env.PROJECT_NAME }}
 
-      # Step 9: List Test Results Directory
+      # Step 9: List Test Results Directory (Windows only)
       - name: 📂 List Test Results Directory
+        if: runner.os == 'Windows'
         run: ls ${{ env.PROJECT_TESTRESULTS_PATH }}
 
-      # Step 10: Upload Coverage XML as Artifact
+      # Step 10: Upload Coverage XML as Artifact (Windows only)
       - name: 📂 Upload Coverage XML as Artifact
+        if: runner.os == 'Windows'
         uses: actions/upload-artifact@v6
         with:
           name: coverage-report
           path: ${{ env.PROJECT_TESTRESULTS_PATH }}/*/coverage.cobertura.xml
 
-      # Step 11: Upload test results as an artifact
+      # Step 11: Upload test results as an artifact (Windows only)
       - name: 📂 Upload Test Results as Artifact
+        if: runner.os == 'Windows'
         uses: actions/upload-artifact@v6
         with:
           name: test-results
           path: ${{ env.PROJECT_TESTRESULTS_PATH }}/test-results.trx
 
-      # Step 12: Upload coverage report to Codecov
+      # Step 12: Upload coverage report to Codecov (Windows only)
       - name: ☁️ Upload coverage reports to Codecov
+        if: runner.os == 'Windows'
         uses: codecov/codecov-action@v5
         with:
           files: ${{ env.PROJECT_TESTRESULTS_PATH }}/*/coverage.cobertura.xml
