@@ -70,7 +70,7 @@ jobs:
 
       # Step 7: Run linting process
       - name: 🔨 Lint
-        run: dotnet format ${{ env.PROJECT_NAME }} --severity warn --verify-no-changes /p:NuGetAudit=false
+        run: dotnet format ${{ env.PROJECT_NAME }} --severity warn --verify-no-changes --no-restore
 
       # Step 8: Run tests and generate code coverage report
       - name: 🔨 Test with Coverage
