@@ -1,7 +1,6 @@
 ﻿using PhotoManager.Domain;
 using PhotoManager.Domain.Interfaces;
 using System.Reflection;
-using System.Windows.Media.Imaging;
 
 namespace PhotoManager.Application;
 
@@ -81,11 +80,11 @@ public class Application(
         userConfigurationService.GetAboutInformation(assembly);
 
     // ImageProcessingService
-    public BitmapImage LoadBitmapImageFromPath(string imagePath, Rotation rotation) =>
-        imageProcessingService.LoadBitmapImageFromPath(imagePath, rotation);
+    public ImageInfo LoadImageFromPath(string imagePath, Enums.ImageRotation rotation) =>
+        imageProcessingService.LoadImageFromPath(imagePath, rotation);
 
-    public BitmapImage LoadBitmapHeicImageFromPath(string imagePath, Rotation rotation) =>
-        imageProcessingService.LoadBitmapHeicImageFromPath(imagePath, rotation);
+    public ImageInfo LoadHeicImageFromPath(string imagePath, Enums.ImageRotation rotation) =>
+        imageProcessingService.LoadHeicImageFromPath(imagePath, rotation);
 
     // FileOperationsService
     public bool FileExists(string fullPath) => fileOperationsService.FileExists(fullPath);

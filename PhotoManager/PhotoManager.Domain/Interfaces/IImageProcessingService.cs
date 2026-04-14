@@ -2,16 +2,16 @@
 
 public interface IImageProcessingService
 {
-    BitmapImage LoadBitmapThumbnailImage(byte[] buffer, Rotation rotation, int width, int height);
-    BitmapImage LoadBitmapThumbnailImage(byte[] buffer, int width, int height);
-    BitmapImage LoadBitmapOriginalImage(byte[] buffer, Rotation rotation);
-    BitmapImage LoadBitmapImageFromPath(string imagePath, Rotation rotation);
-    BitmapImage LoadBitmapHeicOriginalImage(byte[] imageBytes, Rotation rotation);
-    BitmapImage LoadBitmapHeicThumbnailImage(byte[] buffer, Rotation rotation, int width, int height);
-    BitmapImage LoadBitmapHeicImageFromPath(string imagePath, Rotation rotation);
-    byte[] GetJpegBitmapImage(BitmapImage thumbnailImage);
-    byte[] GetPngBitmapImage(BitmapImage thumbnailImage);
-    byte[] GetGifBitmapImage(BitmapImage thumbnailImage);
+    ImageInfo LoadThumbnailImage(byte[] buffer, Enums.ImageRotation rotation, int width, int height);
+    ImageInfo LoadThumbnailImage(byte[] buffer, int width, int height);
+    ImageInfo LoadOriginalImage(byte[] buffer, Enums.ImageRotation rotation);
+    ImageInfo LoadImageFromPath(string imagePath, Enums.ImageRotation rotation);
+    ImageInfo LoadHeicOriginalImage(byte[] imageBytes, Enums.ImageRotation rotation);
+    ImageInfo LoadHeicThumbnailImage(byte[] buffer, Enums.ImageRotation rotation, int width, int height);
+    ImageInfo LoadHeicImageFromPath(string imagePath, Enums.ImageRotation rotation);
+    byte[] GetJpegBytes(ImageInfo imageInfo);
+    byte[] GetPngBytes(ImageInfo imageInfo);
+    byte[] GetGifBytes(ImageInfo imageInfo);
     bool IsValidGdiPlusImage(byte[] imageData);
     bool IsValidHeic(byte[] imageData);
 }

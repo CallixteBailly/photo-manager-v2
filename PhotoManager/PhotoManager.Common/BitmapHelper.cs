@@ -1,29 +1,20 @@
 using ImageMagick;
 using Microsoft.Extensions.Logging;
+using PhotoManager.Domain;
 
 namespace PhotoManager.Common;
 
 public static class BitmapHelper
 {
     // From CatalogAssetsService for CreateAsset() to get the originalImage
-    public static BitmapImage LoadBitmapOriginalImage(byte[] buffer, Rotation rotation, ILogger logger)
+    public static ImageInfo LoadOriginalImage(byte[] buffer, Enums.ImageRotation rotation, ILogger logger)
     {
         try
         {
-            BitmapImage image = new();
-
-            using (MemoryStream stream = new(buffer))
-            {
-                image.BeginInit();
-                image.CacheOption = BitmapCacheOption.OnLoad; // To keep the imageData after dispose of the using block
-                image.CreateOptions = BitmapCreateOptions.IgnoreColorProfile;
-                image.StreamSource = stream;
-                image.Rotation = rotation;
-                image.EndInit();
-                image.Freeze();
-            }
-
-            return image;
+            using MagickImage magickImage = new(buffer);
+            MagickImageApplyRotation(magickImage, rotation);
+            byte[] imageData = magickImage.ToByteArray(MagickFormat.Bmp);
+            return new ImageInfo(imageData, (int)magickImage.Width, (int)magickImage.Height, rotation);
         }
         catch (Exception ex) when (ex is not ArgumentException and not ArgumentNullException and not OverflowException)
         {
@@ -35,27 +26,16 @@ public static class BitmapHelper
     }
 
     // From CatalogAssetsService for CreateAsset() to get the thumbnailImage
-    public static BitmapImage LoadBitmapThumbnailImage(byte[] buffer, Rotation rotation, int width, int height,
+    public static ImageInfo LoadThumbnailImage(byte[] buffer, Enums.ImageRotation rotation, int width, int height,
         ILogger logger)
     {
         try
         {
-            BitmapImage image = new();
-
-            using (MemoryStream stream = new(buffer))
-            {
-                image.BeginInit();
-                image.CacheOption = BitmapCacheOption.OnLoad; // To keep the imageData after dispose of the using block
-                image.CreateOptions = BitmapCreateOptions.IgnoreColorProfile;
-                image.StreamSource = stream;
-                image.Rotation = rotation;
-                image.DecodePixelWidth = width;
-                image.DecodePixelHeight = height;
-                image.EndInit();
-                image.Freeze();
-            }
-
-            return image;
+            using MagickImage magickImage = new(buffer);
+            MagickImageApplyRotation(magickImage, rotation);
+            magickImage.Resize((uint)width, (uint)height);
+            byte[] imageData = magickImage.ToByteArray(MagickFormat.Bmp);
+            return new ImageInfo(imageData, width, height, rotation);
         }
         catch (Exception ex) when (ex is not ArgumentException and not ArgumentNullException and not OverflowException)
         {
@@ -67,172 +47,86 @@ public static class BitmapHelper
     }
 
     // From CatalogAssetsService for CreateAsset() to get the originalImage for HEIC
-    public static BitmapImage LoadBitmapHeicOriginalImage(byte[] buffer, Rotation rotation, ILogger logger)
+    public static ImageInfo LoadHeicOriginalImage(byte[] buffer, Enums.ImageRotation rotation, ILogger logger)
     {
-        BitmapImage image = new();
-
         try
         {
-            using (MemoryStream stream = new(buffer))
-            {
-                using (MagickImage magickImage = new(stream))
-                {
-                    // Apply Rotation because MagickImage does not rotate the image in-place
-                    MagickImageApplyRotation(magickImage, rotation, true);
-
-                    // Convert the MagickImage to a BitmapImage
-                    using (MemoryStream bitmapStream = new())
-                    {
-                        magickImage.Write(bitmapStream, MagickFormat.Bmp);
-                        bitmapStream.Position = 0;
-
-                        BitmapImage bitmapImage = new();
-                        bitmapImage.BeginInit();
-                        // To keep the imageData after dispose of the using block
-                        bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                        bitmapImage.CreateOptions = BitmapCreateOptions.IgnoreColorProfile;
-                        bitmapImage.StreamSource = bitmapStream;
-                        bitmapImage.Rotation = rotation; // Set the rotation value to save it into the BitmapImage
-                        bitmapImage.EndInit();
-                        bitmapImage.Freeze();
-                        image = bitmapImage;
-
-                        return image;
-                    }
-                }
-            }
+            using MagickImage magickImage = new(buffer);
+            MagickImageApplyRotation(magickImage, rotation);
+            byte[] imageData = magickImage.ToByteArray(MagickFormat.Bmp);
+            return new ImageInfo(imageData, (int)magickImage.Width, (int)magickImage.Height, rotation);
         }
-        catch (MagickException)
+        catch (MagickException ex)
         {
-            logger.LogError("The image is not valid or in an unsupported format");
+            logger.LogError(ex, "The image is not valid or in an unsupported format");
+            throw;
         }
-
-        return image;
     }
 
     // From CatalogAssetsService for CreateAsset() to get the thumbnailImage for HEIC
-    public static BitmapImage LoadBitmapHeicThumbnailImage(byte[] buffer, Rotation rotation, int width, int height,
+    public static ImageInfo LoadHeicThumbnailImage(byte[] buffer, Enums.ImageRotation rotation, int width, int height,
         ILogger logger)
     {
-        BitmapImage image = new();
-
         try
         {
-            using (MemoryStream stream = new(buffer))
-            {
-                using (MagickImage magickImage = new(stream))
-                {
-                    // Apply Rotation because MagickImage does not rotate the image in-place
-                    MagickImageApplyRotation(magickImage, rotation, false);
-
-                    // Resize the MagickImage
-                    magickImage.Resize((uint)width, (uint)height);
-
-                    // Convert the MagickImage to a BitmapImage
-                    using (MemoryStream bitmapStream = new())
-                    {
-                        magickImage.Write(bitmapStream, MagickFormat.Bmp);
-                        bitmapStream.Position = 0;
-
-                        BitmapImage bitmapImage = new();
-                        bitmapImage.BeginInit();
-                        // To keep the imageData after dispose of the using block
-                        bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                        bitmapImage.CreateOptions = BitmapCreateOptions.IgnoreColorProfile;
-                        bitmapImage.StreamSource = bitmapStream;
-                        bitmapImage.Rotation = rotation; // Set the rotation value to save it into the BitmapImage
-                        bitmapImage.EndInit();
-                        bitmapImage.Freeze();
-                        image = bitmapImage;
-
-                        return image;
-                    }
-                }
-            }
+            using MagickImage magickImage = new(buffer);
+            MagickImageApplyRotation(magickImage, rotation);
+            magickImage.Resize((uint)width, (uint)height);
+            byte[] imageData = magickImage.ToByteArray(MagickFormat.Bmp);
+            return new ImageInfo(imageData, width, height, rotation);
         }
-        catch (MagickException)
+        catch (MagickException ex)
         {
-            logger.LogError("The image is not valid or in an unsupported format");
+            logger.LogError(ex, "The image is not valid or in an unsupported format");
+            throw;
         }
-
-        return image;
     }
 
     // From ShowImage() in ViewerUserControl to open the image in fullscreen mode
-    public static BitmapImage LoadBitmapImageFromPath(string imagePath, Rotation rotation)
+    public static ImageInfo LoadImageFromPath(string imagePath, Enums.ImageRotation rotation)
     {
-        BitmapImage image = new();
-
-        if (File.Exists(imagePath))
+        if (!File.Exists(imagePath))
         {
-            image.BeginInit();
-            image.CacheOption = BitmapCacheOption.OnLoad; // To keep the imageData after dispose of the using block
-            image.CreateOptions = BitmapCreateOptions.IgnoreColorProfile;
-            image.UriSource = new(imagePath);
-            image.Rotation = rotation;
-            image.EndInit();
-            image.Freeze();
+            return new ImageInfo([], 0, 0, rotation);
         }
 
-        return image;
+        using MagickImage magickImage = new(imagePath);
+        MagickImageApplyRotation(magickImage, rotation);
+        byte[] imageData = magickImage.ToByteArray(MagickFormat.Bmp);
+        return new ImageInfo(imageData, (int)magickImage.Width, (int)magickImage.Height, rotation);
     }
 
     // From ShowImage() in ViewerUserControl to open the image in fullscreen mode for Heic
-    public static BitmapImage LoadBitmapHeicImageFromPath(string imagePath, Rotation rotation, ILogger logger)
+    public static ImageInfo LoadHeicImageFromPath(string imagePath, Enums.ImageRotation rotation, ILogger logger)
     {
-        BitmapImage image = new();
-
-        if (File.Exists(imagePath))
+        if (!File.Exists(imagePath))
         {
-            try
-            {
-                using (MagickImage magickImage = new(imagePath))
-                {
-                    // Apply Rotation because MagickImage does not rotate the image in-place
-                    MagickImageApplyRotation(magickImage, rotation, false);
-
-                    // Convert the MagickImage to a byte array (supported format: JPG)
-                    byte[] imageData = magickImage.ToByteArray(MagickFormat.Jpg);
-
-                    // Create a BitmapImage from the byte array and set the rotation
-                    image.BeginInit();
-                    image.CacheOption = BitmapCacheOption.OnLoad; // To keep the imageData after dispose of the using block
-                    image.CreateOptions = BitmapCreateOptions.IgnoreColorProfile;
-                    image.StreamSource = new MemoryStream(imageData);
-                    image.Rotation = rotation;
-                    image.EndInit();
-                    image.Freeze();
-                }
-            }
-            catch (MagickException)
-            {
-                logger.LogError("Failed to load HEIC image from path: {imagePath}.", imagePath);
-            }
+            return new ImageInfo([], 0, 0, rotation);
         }
 
-        return image;
+        try
+        {
+            using MagickImage magickImage = new(imagePath);
+            MagickImageApplyRotation(magickImage, rotation);
+            byte[] imageData = magickImage.ToByteArray(MagickFormat.Jpg);
+            return new ImageInfo(imageData, (int)magickImage.Width, (int)magickImage.Height, rotation);
+        }
+        catch (MagickException ex)
+        {
+            logger.LogError(ex, "Failed to load HEIC image from path: {imagePath}.", imagePath);
+            return new ImageInfo([], 0, 0, rotation);
+        }
     }
 
     // From AssetRepository
-    public static BitmapImage LoadBitmapThumbnailImage(byte[] buffer, int width, int height, ILogger logger)
+    public static ImageInfo LoadThumbnailImage(byte[] buffer, int width, int height, ILogger logger)
     {
         try
         {
-            BitmapImage thumbnailImage = new();
-
-            using (MemoryStream stream = new(buffer))
-            {
-                thumbnailImage.BeginInit();
-                thumbnailImage.CacheOption = BitmapCacheOption.OnLoad;
-                thumbnailImage.CreateOptions = BitmapCreateOptions.IgnoreColorProfile;
-                thumbnailImage.StreamSource = stream;
-                thumbnailImage.DecodePixelWidth = width;
-                thumbnailImage.DecodePixelHeight = height;
-                thumbnailImage.EndInit();
-                thumbnailImage.Freeze();
-            }
-
-            return thumbnailImage;
+            using MagickImage magickImage = new(buffer);
+            magickImage.Resize((uint)width, (uint)height);
+            byte[] imageData = magickImage.ToByteArray(MagickFormat.Bmp);
+            return new ImageInfo(imageData, width, height, Enums.ImageRotation.Rotate0);
         }
         catch (Exception ex) when (ex is not ArgumentException and not ArgumentNullException and not OverflowException)
         {
@@ -243,67 +137,50 @@ public static class BitmapHelper
 
     public static Bitmap? LoadBitmapFromPath(string imagePath)
     {
-        Bitmap? image = null;
-
-        if (File.Exists(imagePath))
+        if (!File.Exists(imagePath))
         {
-            using (MagickImage magickImage = new(imagePath))
-            {
-                // Convert the MagickImage to a byte array (supported format: JPG)
-                byte[] imageData = magickImage.ToByteArray(MagickFormat.Jpg);
-
-                using (MemoryStream stream = new(imageData))
-                {
-                    using (Bitmap bitmap = new(stream))
-                    {
-                        // Create a copy of the Bitmap
-                        // When the using block for the MemoryStream is exited, the stream is disposed of, which lead to have a default bitmap at the end and to lose all the data.
-                        image = new(bitmap);
-                    }
-                }
-            }
+            return null;
         }
 
-        return image;
+        using MagickImage magickImage = new(imagePath);
+        byte[] imageData = magickImage.ToByteArray(MagickFormat.Jpg);
+
+        using MemoryStream stream = new(imageData);
+        using Bitmap bitmap = new(stream);
+        // Create a copy of the Bitmap
+        // When the using block for the MemoryStream is exited, the stream is disposed of, which lead to have a default bitmap at the end and to lose all the data.
+        return new Bitmap(bitmap);
     }
 
-    public static byte[] GetJpegBitmapImage(BitmapImage image)
+    public static byte[] GetJpegBytes(ImageInfo imageInfo)
     {
-        return GetBitmapImage(image, new JpegBitmapEncoder());
+        return GetImageBytes(imageInfo, MagickFormat.Jpg);
     }
 
-    public static byte[] GetPngBitmapImage(BitmapImage image)
+    public static byte[] GetPngBytes(ImageInfo imageInfo)
     {
-        return GetBitmapImage(image, new PngBitmapEncoder());
+        return GetImageBytes(imageInfo, MagickFormat.Png);
     }
 
-    public static byte[] GetGifBitmapImage(BitmapImage image)
+    public static byte[] GetGifBytes(ImageInfo imageInfo)
     {
-        return GetBitmapImage(image, new GifBitmapEncoder());
+        return GetImageBytes(imageInfo, MagickFormat.Gif);
     }
 
-    private static byte[] GetBitmapImage(BitmapImage image, BitmapEncoder encoder)
+    private static byte[] GetImageBytes(ImageInfo imageInfo, MagickFormat format)
     {
-        byte[] imageBuffer;
-        encoder.Frames.Add(BitmapFrame.Create(image));
-
-        using (MemoryStream memoryStream = new())
-        {
-            encoder.Save(memoryStream);
-            imageBuffer = memoryStream.ToArray();
-        }
-
-        return imageBuffer;
+        using MagickImage magickImage = new(imageInfo.Data);
+        MagickImageApplyRotation(magickImage, imageInfo.Rotation);
+        return magickImage.ToByteArray(format);
     }
 
-    private static void MagickImageApplyRotation(MagickImage magickImage, Rotation rotation, bool isClockwise)
+    private static void MagickImageApplyRotation(MagickImage magickImage, Enums.ImageRotation rotation)
     {
-
         int rotationAngle = rotation switch
         {
-            Rotation.Rotate90 => isClockwise ? 90 : -90,
-            Rotation.Rotate180 => isClockwise ? 180 : -180,
-            Rotation.Rotate270 => isClockwise ? 270 : -270,
+            Enums.ImageRotation.Rotate90 => 90,
+            Enums.ImageRotation.Rotate180 => 180,
+            Enums.ImageRotation.Rotate270 => 270,
             _ => 0
         };
 

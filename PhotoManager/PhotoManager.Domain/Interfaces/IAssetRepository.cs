@@ -23,7 +23,7 @@ public interface IAssetRepository
     void DeleteFolder(Folder folder);
     bool HasChanges();
     bool ContainsThumbnail(string directoryName, string fileName);
-    BitmapImage? LoadThumbnail(string directoryName, string fileName, int width, int height);
+    byte[]? LoadThumbnail(string directoryName, string fileName, int width, int height);
     bool IsBlobFileExists(string blobName);
     SyncAssetsConfiguration GetSyncAssetsConfiguration();
     void SaveSyncAssetsConfiguration(SyncAssetsConfiguration syncAssetsConfiguration);

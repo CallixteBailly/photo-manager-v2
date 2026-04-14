@@ -1,64 +1,64 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 
 namespace PhotoManager.Infrastructure;
 
 public class ImageProcessingService(ILogger<ImageProcessingService> logger) : IImageProcessingService
 {
     // From CatalogAssetsService for CreateAsset() to get the thumbnailImage
-    public BitmapImage LoadBitmapThumbnailImage(byte[] buffer, Rotation rotation, int width, int height)
+    public ImageInfo LoadThumbnailImage(byte[] buffer, Enums.ImageRotation rotation, int width, int height)
     {
-        return BitmapHelper.LoadBitmapThumbnailImage(buffer, rotation, width, height, logger);
+        return BitmapHelper.LoadThumbnailImage(buffer, rotation, width, height, logger);
     }
 
     // From AssetRepository
-    public BitmapImage LoadBitmapThumbnailImage(byte[] buffer, int width, int height)
+    public ImageInfo LoadThumbnailImage(byte[] buffer, int width, int height)
     {
-        return BitmapHelper.LoadBitmapThumbnailImage(buffer, width, height, logger);
+        return BitmapHelper.LoadThumbnailImage(buffer, width, height, logger);
     }
 
     // From CatalogAssetsService for CreateAsset() to get the originalImage
-    public BitmapImage LoadBitmapOriginalImage(byte[] buffer, Rotation rotation)
+    public ImageInfo LoadOriginalImage(byte[] buffer, Enums.ImageRotation rotation)
     {
-        return BitmapHelper.LoadBitmapOriginalImage(buffer, rotation, logger);
+        return BitmapHelper.LoadOriginalImage(buffer, rotation, logger);
     }
 
     // From ShowImage() in ViewerUserControl to open the image in fullscreen mode
-    public BitmapImage LoadBitmapImageFromPath(string imagePath, Rotation rotation)
+    public ImageInfo LoadImageFromPath(string imagePath, Enums.ImageRotation rotation)
     {
-        return BitmapHelper.LoadBitmapImageFromPath(imagePath, rotation);
+        return BitmapHelper.LoadImageFromPath(imagePath, rotation);
     }
 
     // From CatalogAssetsService for CreateAsset() to get the originalImage for HEIC
-    public BitmapImage LoadBitmapHeicOriginalImage(byte[] imageBytes, Rotation rotation)
+    public ImageInfo LoadHeicOriginalImage(byte[] imageBytes, Enums.ImageRotation rotation)
     {
-        return BitmapHelper.LoadBitmapHeicOriginalImage(imageBytes, rotation, logger);
+        return BitmapHelper.LoadHeicOriginalImage(imageBytes, rotation, logger);
     }
 
     // From CatalogAssetsService for CreateAsset() to get the thumbnailImage for HEIC
-    public BitmapImage LoadBitmapHeicThumbnailImage(byte[] buffer, Rotation rotation, int width, int height)
+    public ImageInfo LoadHeicThumbnailImage(byte[] buffer, Enums.ImageRotation rotation, int width, int height)
     {
-        return BitmapHelper.LoadBitmapHeicThumbnailImage(buffer, rotation, width, height, logger);
+        return BitmapHelper.LoadHeicThumbnailImage(buffer, rotation, width, height, logger);
     }
 
     // From ShowImage() in ViewerUserControl to open the image in fullscreen mode for Heic
-    public BitmapImage LoadBitmapHeicImageFromPath(string imagePath, Rotation rotation)
+    public ImageInfo LoadHeicImageFromPath(string imagePath, Enums.ImageRotation rotation)
     {
-        return BitmapHelper.LoadBitmapHeicImageFromPath(imagePath, rotation, logger);
+        return BitmapHelper.LoadHeicImageFromPath(imagePath, rotation, logger);
     }
 
-    public byte[] GetJpegBitmapImage(BitmapImage thumbnailImage)
+    public byte[] GetJpegBytes(ImageInfo imageInfo)
     {
-        return BitmapHelper.GetJpegBitmapImage(thumbnailImage);
+        return BitmapHelper.GetJpegBytes(imageInfo);
     }
 
-    public byte[] GetPngBitmapImage(BitmapImage thumbnailImage)
+    public byte[] GetPngBytes(ImageInfo imageInfo)
     {
-        return BitmapHelper.GetPngBitmapImage(thumbnailImage);
+        return BitmapHelper.GetPngBytes(imageInfo);
     }
 
-    public byte[] GetGifBitmapImage(BitmapImage thumbnailImage)
+    public byte[] GetGifBytes(ImageInfo imageInfo)
     {
-        return BitmapHelper.GetGifBitmapImage(thumbnailImage);
+        return BitmapHelper.GetGifBytes(imageInfo);
     }
 
     public bool IsValidGdiPlusImage(byte[] imageData)

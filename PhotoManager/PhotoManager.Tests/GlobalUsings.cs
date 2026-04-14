@@ -18,4 +18,3 @@ global using PhotoManager.UI.ViewModels;
 // System
 global using System.Drawing;
 global using System.IO;
-global using System.Windows.Media.Imaging;
