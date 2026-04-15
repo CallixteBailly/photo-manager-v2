@@ -16,25 +16,17 @@ public static class ExifHelper
         {
             using (MemoryStream stream = new(buffer))
             {
-                BitmapFrame bitmapFrame = BitmapFrame.Create(stream);
-
-                if (bitmapFrame.Metadata is BitmapMetadata bitmapMetadata)
+                using (MagickImage image = new(stream))
                 {
-                    object? orientation = bitmapMetadata.GetQuery("System.Photo.Orientation");
-
-                    if (orientation == null)
-                    {
-                        return defaultExifOrientation;
-                    }
-
-                    return (ushort)orientation;
+                    // image.Orientation contains the value from the exif data
+                    return GetMagickOrientation(image.Orientation, defaultExifOrientation, corruptedImageOrientation);
                 }
             }
         }
         catch (Exception ex)
         {
-            // All WPF/WIC NotSupportedExceptions always include a COMException as InnerException
-            if (ex is NotSupportedException && ex.InnerException!.HResult == -2003292351)
+            // MagickException for corrupted images
+            if (ex is MagickException)
             {
                 logger.LogError("The image is corrupted");
             }
@@ -84,19 +76,19 @@ public static class ExifHelper
     // (ushort)6 <=> "Rotate 90 CW"
     // (ushort)7 <=> "Mirror horizontal and rotate 90 CW"
     // (ushort)8 <=> "Rotate 270 CW"
-    public static Rotation GetImageRotation(ushort exifOrientation)
+    public static Domain.Enums.ImageRotation GetImageRotation(ushort exifOrientation)
     {
-        Rotation rotation = exifOrientation switch
+        Domain.Enums.ImageRotation rotation = exifOrientation switch
         {
-            1 => Rotation.Rotate0,
-            2 => Rotation.Rotate0, // FlipX
-            3 => Rotation.Rotate180,
-            4 => Rotation.Rotate180, // FlipX
-            5 => Rotation.Rotate90, // FlipX
-            6 => Rotation.Rotate90,
-            7 => Rotation.Rotate270, // FlipX
-            8 => Rotation.Rotate270,
-            _ => Rotation.Rotate0,
+            1 => Domain.Enums.ImageRotation.Rotate0,
+            2 => Domain.Enums.ImageRotation.Rotate0, // FlipX
+            3 => Domain.Enums.ImageRotation.Rotate180,
+            4 => Domain.Enums.ImageRotation.Rotate180, // FlipX
+            5 => Domain.Enums.ImageRotation.Rotate90, // FlipX
+            6 => Domain.Enums.ImageRotation.Rotate90,
+            7 => Domain.Enums.ImageRotation.Rotate270, // FlipX
+            8 => Domain.Enums.ImageRotation.Rotate270,
+            _ => Domain.Enums.ImageRotation.Rotate0,
         };
 
         return rotation;
@@ -108,7 +100,10 @@ public static class ExifHelper
         {
             using (MemoryStream ms = new(imageData))
             {
-                BitmapFrame.Create(ms);
+                using (new MagickImage(ms))
+                {
+                    // Image is valid
+                }
             }
 
             return true;
@@ -139,6 +134,24 @@ public static class ExifHelper
             logger.LogError("The image is not valid or in an unsupported format");
             return false;
         }
+    }
+
+    // 1: Normal (0 deg rotation)
+    // 3: Upside-down (180 deg rotation)
+    // 6: Rotated 90 deg clockwise (270 deg counterclockwise)
+    // 8: Rotated 90 deg counterclockwise (270 deg clockwise)
+    private static ushort GetMagickOrientation(OrientationType orientationType, ushort defaultExifOrientation,
+        ushort corruptedImageOrientation)
+    {
+        return orientationType switch
+        {
+            OrientationType.Undefined => defaultExifOrientation,
+            (OrientationType.TopLeft or OrientationType.LeftTop) => 1,
+            (OrientationType.BottomLeft or OrientationType.LeftBottom) => 8,
+            (OrientationType.BottomRight or OrientationType.RightBottom) => 3,
+            (OrientationType.TopRight or OrientationType.RightTop) => 6,
+            _ => corruptedImageOrientation
+        };
     }
 
     // 1: Normal (0 deg rotation)

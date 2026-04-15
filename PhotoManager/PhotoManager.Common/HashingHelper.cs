@@ -60,24 +60,32 @@ public static class HashingHelper
     // For GIF or some heic file it returns "00000000000000"
     public static string CalculateDHash(string? filePath)
     {
-        bool isHeicFile = filePath?.EndsWith(".heic", StringComparison.OrdinalIgnoreCase) ?? false;
-
-        using (Bitmap? image = isHeicFile ? BitmapHelper.LoadBitmapFromPath(filePath!) : new(filePath!))
+        using (MagickImage image = new(filePath!))
         {
+            // Resize to 9x8 for DHash calculation
+            image.Resize(9, 8);
+
+            // Convert to grayscale
+            image.Grayscale(PixelIntensityMethod.Average);
+
             ulong hash = 0UL;
             ulong mask = 1UL;
 
-            for (int y = 0; y < 8; y++)
+            // Get pixel data as 2D array of grayscale values
+            using (IPixelCollection<ushort> pixels = image.GetPixels())
             {
-                for (int x = 0; x < 7; x++)
+                for (int y = 0; y < 8; y++)
                 {
-                    float? leftPixel = image?.GetPixel(x, y).GetBrightness();
-                    float? rightPixel = image?.GetPixel(x + 1, y).GetBrightness();
-                    if (leftPixel < rightPixel)
+                    for (int x = 0; x < 7; x++)
                     {
-                        hash |= mask;
+                        ushort leftPixel = pixels.GetPixel(x, y)[0];
+                        ushort rightPixel = pixels.GetPixel(x + 1, y)[0];
+                        if (leftPixel < rightPixel)
+                        {
+                            hash |= mask;
+                        }
+                        mask <<= 1;
                     }
-                    mask <<= 1;
                 }
             }
 
