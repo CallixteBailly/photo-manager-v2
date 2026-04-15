@@ -1,4 +1,5 @@
-﻿using PhotoManager.UI.Models;
+using PhotoManager.Domain.Enums;
+using PhotoManager.UI.Models;
 using PhotoManager.UI.ViewModels.Enums;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -72,7 +73,7 @@ public class ViewerUserControlTests
                 Modification = ModificationDate.Default
             },
             ThumbnailCreationDateTime = actualDate,
-            ImageRotation = Rotation.Rotate0,
+            ImageRotation = ImageRotation.Rotate0,
             Hash = Hashes.IMAGE_1_DUPLICATE_JPG,
             Metadata = new()
             {
@@ -97,7 +98,7 @@ public class ViewerUserControlTests
                 Modification = ModificationDate.Default
             },
             ThumbnailCreationDateTime = actualDate,
-            ImageRotation = Rotation.Rotate0,
+            ImageRotation = ImageRotation.Rotate0,
             Hash = Hashes.IMAGE_9_PNG,
             Metadata = new()
             {
@@ -130,7 +131,7 @@ public class ViewerUserControlTests
                 Modification = ModificationDate.Default
             },
             ThumbnailCreationDateTime = actualDate,
-            ImageRotation = Rotation.Rotate0,
+            ImageRotation = ImageRotation.Rotate0,
             Hash = Hashes.IMAGE_9_DUPLICATE_PNG,
             Metadata = new()
             {
@@ -159,7 +160,7 @@ public class ViewerUserControlTests
                 Modification = ModificationDate.Default
             },
             ThumbnailCreationDateTime = actualDate,
-            ImageRotation = Rotation.Rotate0,
+            ImageRotation = ImageRotation.Rotate0,
             Hash = Hashes.IMAGE_11_HEIC,
             Metadata = new()
             {
@@ -434,7 +435,7 @@ public class ViewerUserControlTests
     }
 
     [Test]
-    public async Task ShowImage_CataloguedAssets_ReturnsBitmapImage()
+    public async Task ShowImage_CataloguedAssets_ReturnsImageInfo()
     {
         string assetsDirectory = Path.Combine(_dataDirectory!, Directories.DUPLICATES, Directories.NEW_FOLDER_2);
 
@@ -469,17 +470,13 @@ public class ViewerUserControlTests
             Asset[] expectedAssets = [_asset1, _asset2, _asset3, _asset4];
 
             // First ShowImage (jpg)
-            BitmapImage? bitmapImage = ShowImage();
+            ImageInfo? imageInfo = ShowImage();
 
-            Assert.That(bitmapImage, Is.Not.Null);
-            Assert.That(bitmapImage.StreamSource, Is.Null);
-            Assert.That(bitmapImage.Rotation, Is.EqualTo(_asset1.ImageRotation));
-            Assert.That(bitmapImage.Width, Is.EqualTo(_asset1.Pixel.Asset.Width));
-            Assert.That(bitmapImage.Height, Is.EqualTo(_asset1.Pixel.Asset.Height));
-            Assert.That(bitmapImage.PixelWidth, Is.EqualTo(_asset1.Pixel.Asset.Width));
-            Assert.That(bitmapImage.PixelHeight, Is.EqualTo(_asset1.Pixel.Asset.Height));
-            Assert.That(bitmapImage.DecodePixelWidth, Is.Zero);
-            Assert.That(bitmapImage.DecodePixelHeight, Is.Zero);
+            Assert.That(imageInfo, Is.Not.Null);
+            Assert.That(imageInfo.Value.Data, Is.Not.Null);
+            Assert.That(imageInfo.Value.Rotation, Is.EqualTo(_asset1.ImageRotation));
+            Assert.That(imageInfo.Value.Width, Is.EqualTo(_asset1.Pixel.Asset.Width));
+            Assert.That(imageInfo.Value.Height, Is.EqualTo(_asset1.Pixel.Asset.Height));
 
             CheckAfterChanges(
                 _applicationViewModel!,
@@ -520,17 +517,13 @@ public class ViewerUserControlTests
 
             _applicationViewModel!.GoToAsset(observableAssets[expectedViewerPosition]);
 
-            bitmapImage = ShowImage();
+            imageInfo = ShowImage();
 
-            Assert.That(bitmapImage, Is.Not.Null);
-            Assert.That(bitmapImage.StreamSource, Is.Not.Null);
-            Assert.That(bitmapImage.Rotation, Is.EqualTo(_asset4.ImageRotation));
-            Assert.That(bitmapImage.Width, Is.EqualTo(_asset4.Pixel.Asset.Width));
-            Assert.That(bitmapImage.Height, Is.EqualTo(_asset4.Pixel.Asset.Height));
-            Assert.That(bitmapImage.PixelWidth, Is.EqualTo(_asset4.Pixel.Asset.Width));
-            Assert.That(bitmapImage.PixelHeight, Is.EqualTo(_asset4.Pixel.Asset.Height));
-            Assert.That(bitmapImage.DecodePixelWidth, Is.Zero);
-            Assert.That(bitmapImage.DecodePixelHeight, Is.Zero);
+            Assert.That(imageInfo, Is.Not.Null);
+            Assert.That(imageInfo.Value.Data, Is.Not.Null);
+            Assert.That(imageInfo.Value.Rotation, Is.EqualTo(_asset4.ImageRotation));
+            Assert.That(imageInfo.Value.Width, Is.EqualTo(_asset4.Pixel.Asset.Width));
+            Assert.That(imageInfo.Value.Height, Is.EqualTo(_asset4.Pixel.Asset.Height));
 
             CheckAfterChanges(
                 _applicationViewModel!,
@@ -593,7 +586,7 @@ public class ViewerUserControlTests
     }
 
     [Test]
-    public async Task ShowImage_CataloguedAssetsAndNegativeViewerPosition_ReturnsBitmapImage()
+    public async Task ShowImage_CataloguedAssetsAndNegativeViewerPosition_ReturnsImageInfo()
     {
         string assetsDirectory = Path.Combine(_dataDirectory!, Directories.DUPLICATES, Directories.NEW_FOLDER_2);
 
@@ -627,17 +620,13 @@ public class ViewerUserControlTests
 
             _applicationViewModel!.ViewerPosition = -1;
 
-            BitmapImage? bitmapImage = ShowImage();
+            ImageInfo? imageInfo = ShowImage();
 
-            Assert.That(bitmapImage, Is.Not.Null);
-            Assert.That(bitmapImage.StreamSource, Is.Null);
-            Assert.That(bitmapImage.Rotation, Is.EqualTo(_asset1.ImageRotation));
-            Assert.That(bitmapImage.Width, Is.EqualTo(_asset1.Pixel.Asset.Width));
-            Assert.That(bitmapImage.Height, Is.EqualTo(_asset1.Pixel.Asset.Height));
-            Assert.That(bitmapImage.PixelWidth, Is.EqualTo(_asset1.Pixel.Asset.Width));
-            Assert.That(bitmapImage.PixelHeight, Is.EqualTo(_asset1.Pixel.Asset.Height));
-            Assert.That(bitmapImage.DecodePixelWidth, Is.Zero);
-            Assert.That(bitmapImage.DecodePixelHeight, Is.Zero);
+            Assert.That(imageInfo, Is.Not.Null);
+            Assert.That(imageInfo.Value.Data, Is.Not.Null);
+            Assert.That(imageInfo.Value.Rotation, Is.EqualTo(_asset1.ImageRotation));
+            Assert.That(imageInfo.Value.Width, Is.EqualTo(_asset1.Pixel.Asset.Width));
+            Assert.That(imageInfo.Value.Height, Is.EqualTo(_asset1.Pixel.Asset.Height));
 
             CheckAfterChanges(
                 _applicationViewModel!,
@@ -725,9 +714,9 @@ public class ViewerUserControlTests
                 $"PhotoManager {Constants.VERSION} - {assetsDirectory} - image 0 of 0 - sorted by file name ascending";
             const string expectedStatusMessage = "The catalog process has ended.";
 
-            BitmapImage? bitmapImage = ShowImage();
+            ImageInfo? imageInfo = ShowImage();
 
-            Assert.That(bitmapImage, Is.Null);
+            Assert.That(imageInfo, Is.Null);
 
             CheckAfterChanges(
                 _applicationViewModel!,
@@ -962,20 +951,20 @@ public class ViewerUserControlTests
         }
     }
 
-    private BitmapImage? ShowImage()
+    private ImageInfo? ShowImage()
     {
-        BitmapImage? bitmapImage = null;
+        ImageInfo? imageInfo = null;
 
         if (_applicationViewModel is { CurrentAsset: not null })
         {
             bool isHeic =
                 _applicationViewModel.CurrentAsset.FileName.EndsWith(".heic", StringComparison.OrdinalIgnoreCase);
 
-            bitmapImage = isHeic
-                ? _applicationViewModel.LoadBitmapHeicImageFromPath()
-                : _applicationViewModel.LoadBitmapImageFromPath();
+            imageInfo = isHeic
+                ? _applicationViewModel.LoadHeicImageFromPath()
+                : _applicationViewModel.LoadImageFromPath();
         }
 
-        return bitmapImage;
+        return imageInfo;
     }
 }

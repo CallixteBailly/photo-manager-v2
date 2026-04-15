@@ -1,4 +1,5 @@
-﻿using PhotoManager.UI.Models;
+using PhotoManager.Domain.Enums;
+using PhotoManager.UI.Models;
 using PhotoManager.UI.ViewModels.Enums;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -62,7 +63,7 @@ public class ApplicationViewModelLoadBitmapHeicImageFromPathTests
                 Modification = ModificationDate.Default
             },
             ThumbnailCreationDateTime = DateTime.Now,
-            ImageRotation = Rotation.Rotate0,
+            ImageRotation = ImageRotation.Rotate0,
             Hash = Hashes.IMAGE_1_DUPLICATE_JPG,
             Metadata = new()
             {
@@ -87,7 +88,7 @@ public class ApplicationViewModelLoadBitmapHeicImageFromPathTests
                 Modification = ModificationDate.Default
             },
             ThumbnailCreationDateTime = DateTime.Now,
-            ImageRotation = Rotation.Rotate0,
+            ImageRotation = ImageRotation.Rotate0,
             Hash = Hashes.IMAGE_9_PNG,
             Metadata = new()
             {
@@ -120,7 +121,7 @@ public class ApplicationViewModelLoadBitmapHeicImageFromPathTests
                 Modification = ModificationDate.Default
             },
             ThumbnailCreationDateTime = DateTime.Now,
-            ImageRotation = Rotation.Rotate0,
+            ImageRotation = ImageRotation.Rotate0,
             Hash = Hashes.IMAGE_9_DUPLICATE_PNG,
             Metadata = new()
             {
@@ -149,7 +150,7 @@ public class ApplicationViewModelLoadBitmapHeicImageFromPathTests
                 Modification = ModificationDate.Default
             },
             ThumbnailCreationDateTime = DateTime.Now,
-            ImageRotation = Rotation.Rotate0,
+            ImageRotation = ImageRotation.Rotate0,
             Hash = Hashes.IMAGE_11_HEIC,
             Metadata = new()
             {
@@ -239,17 +240,13 @@ public class ApplicationViewModelLoadBitmapHeicImageFromPathTests
                 $"PhotoManager {Constants.VERSION} - {assetsDirectory} - image 1 of 4 - sorted by file name ascending";
             const string expectedStatusMessage = "The catalog process has ended.";
 
-            BitmapImage image1 = _applicationViewModel!.LoadBitmapHeicImageFromPath();
+            ImageInfo image1 = _applicationViewModel!.LoadHeicImageFromPath();
 
             Assert.That(image1, Is.Not.Null);
-            Assert.That(image1.StreamSource, Is.Not.Null);
+            Assert.That(image1.Data, Is.Not.Empty);
             Assert.That(image1.Rotation, Is.EqualTo(_asset1!.ImageRotation));
             Assert.That(image1.Width, Is.EqualTo(_asset1.Pixel.Asset.Width));
             Assert.That(image1.Height, Is.EqualTo(_asset1.Pixel.Asset.Height));
-            Assert.That(image1.PixelWidth, Is.EqualTo(_asset1.Pixel.Asset.Width));
-            Assert.That(image1.PixelHeight, Is.EqualTo(_asset1.Pixel.Asset.Height));
-            Assert.That(image1.DecodePixelWidth, Is.Zero);
-            Assert.That(image1.DecodePixelHeight, Is.Zero);
 
             CheckAfterChanges(
                 _applicationViewModel!,
@@ -298,19 +295,13 @@ public class ApplicationViewModelLoadBitmapHeicImageFromPathTests
 
             _applicationViewModel!.GoToAsset(_applicationViewModel.ObservableAssets[1]);
 
-            BitmapImage image2 = _applicationViewModel!.LoadBitmapHeicImageFromPath();
+            ImageInfo image2 = _applicationViewModel!.LoadHeicImageFromPath();
 
             Assert.That(image2, Is.Not.Null);
-            Assert.That(image2.StreamSource, Is.Not.Null);
+            Assert.That(image2.Data, Is.Not.Empty);
             Assert.That(image2.Rotation, Is.EqualTo(_asset2!.ImageRotation));
-            Assert.That((int)image2.Width,
-                Is.EqualTo(1307)); // Should be _asset2.Pixel.Asset.Width -> 1280 (weird result for png)
-            Assert.That((int)image2.Height,
-                Is.EqualTo(735)); // Should be _asset2.Pixel.Asset.Height -> 720 (weird result for png)
-            Assert.That(image2.PixelWidth, Is.EqualTo(_asset2.Pixel.Asset.Width));
-            Assert.That(image2.PixelHeight, Is.EqualTo(_asset2.Pixel.Asset.Height));
-            Assert.That(image2.DecodePixelWidth, Is.Zero);
-            Assert.That(image2.DecodePixelHeight, Is.Zero);
+            Assert.That(image2.Width, Is.EqualTo(_asset2.Pixel.Asset.Width));
+            Assert.That(image2.Height, Is.EqualTo(_asset2.Pixel.Asset.Height));
 
             CheckAfterChanges(
                 _applicationViewModel!,
@@ -365,19 +356,13 @@ public class ApplicationViewModelLoadBitmapHeicImageFromPathTests
 
             _applicationViewModel!.GoToAsset(_applicationViewModel.ObservableAssets[2]);
 
-            BitmapImage image3 = _applicationViewModel!.LoadBitmapHeicImageFromPath();
+            ImageInfo image3 = _applicationViewModel!.LoadHeicImageFromPath();
 
             Assert.That(image3, Is.Not.Null);
-            Assert.That(image3.StreamSource, Is.Not.Null);
+            Assert.That(image3.Data, Is.Not.Empty);
             Assert.That(image3.Rotation, Is.EqualTo(_asset3!.ImageRotation));
-            Assert.That((int)image3.Width,
-                Is.EqualTo(1307)); // Should be _asset3.Pixel.Asset.Width -> 1280 (weird result for png)
-            Assert.That((int)image3.Height,
-                Is.EqualTo(735)); // Should be _asset3.Pixel.Asset.Height -> 720 (weird result for png)
-            Assert.That(image3.PixelWidth, Is.EqualTo(_asset3.Pixel.Asset.Width));
-            Assert.That(image3.PixelHeight, Is.EqualTo(_asset3.Pixel.Asset.Height));
-            Assert.That(image3.DecodePixelWidth, Is.Zero);
-            Assert.That(image3.DecodePixelHeight, Is.Zero);
+            Assert.That(image3.Width, Is.EqualTo(_asset3.Pixel.Asset.Width));
+            Assert.That(image3.Height, Is.EqualTo(_asset3.Pixel.Asset.Height));
 
             CheckAfterChanges(
                 _applicationViewModel!,
@@ -438,17 +423,13 @@ public class ApplicationViewModelLoadBitmapHeicImageFromPathTests
 
             _applicationViewModel!.GoToAsset(_applicationViewModel.ObservableAssets[3]);
 
-            BitmapImage image4 = _applicationViewModel!.LoadBitmapHeicImageFromPath();
+            ImageInfo image4 = _applicationViewModel!.LoadHeicImageFromPath();
 
             Assert.That(image4, Is.Not.Null);
-            Assert.That(image4.StreamSource, Is.Not.Null);
+            Assert.That(image4.Data, Is.Not.Empty);
             Assert.That(image4.Rotation, Is.EqualTo(_asset4!.ImageRotation));
             Assert.That(image4.Width, Is.EqualTo(_asset4.Pixel.Asset.Width));
             Assert.That(image4.Height, Is.EqualTo(_asset4.Pixel.Asset.Height));
-            Assert.That(image4.PixelWidth, Is.EqualTo(_asset4.Pixel.Asset.Width));
-            Assert.That(image4.PixelHeight, Is.EqualTo(_asset4.Pixel.Asset.Height));
-            Assert.That(image4.DecodePixelWidth, Is.Zero);
-            Assert.That(image4.DecodePixelHeight, Is.Zero);
 
             CheckAfterChanges(
                 _applicationViewModel!,
@@ -536,7 +517,7 @@ public class ApplicationViewModelLoadBitmapHeicImageFromPathTests
             CheckBeforeChanges(_dataDirectory!);
 
             NullReferenceException? exception =
-                Assert.Throws<NullReferenceException>(() => _applicationViewModel!.LoadBitmapHeicImageFromPath());
+                Assert.Throws<NullReferenceException>(() => _applicationViewModel!.LoadHeicImageFromPath());
 
             Assert.That(exception?.Message, Is.EqualTo("CurrentAsset is null"));
 

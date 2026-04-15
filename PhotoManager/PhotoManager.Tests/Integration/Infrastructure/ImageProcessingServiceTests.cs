@@ -1,5 +1,6 @@
-﻿using Directories = PhotoManager.Tests.Unit.Constants.Directories;
+using Directories = PhotoManager.Tests.Unit.Constants.Directories;
 using FileNames = PhotoManager.Tests.Unit.Constants.FileNames;
+using PhotoManager.Domain.Enums;
 
 namespace PhotoManager.Tests.Integration.Infrastructure;
 
@@ -33,12 +34,12 @@ public class ImageProcessingServiceTests
     [Test]
     [TestCase(FileNames.IMAGE_8_JPEG)]
     [TestCase(FileNames.IMAGE_1_JPG)]
-    public void GetJpegBitmapImage_ValidImage_ReturnsJpegByteArray(string fileName)
+    public void GetJpegBytes_ValidImage_ReturnsJpegByteArray(string fileName)
     {
         string filePath = Path.Combine(_dataDirectory!, fileName);
-        BitmapImage image = new(new(filePath));
+        ImageInfo imageInfo = _imageProcessingService!.LoadImageFromPath(filePath, ImageRotation.Rotate0);
 
-        byte[] imageBuffer = _imageProcessingService!.GetJpegBitmapImage(image);
+        byte[] imageBuffer = _imageProcessingService!.GetJpegBytes(imageInfo);
 
         Assert.That(imageBuffer, Is.Not.Null);
         Assert.That(imageBuffer, Is.Not.Empty);
@@ -62,14 +63,14 @@ public class ImageProcessingServiceTests
     }
 
     [Test]
-    public void GetJpegBitmapImage_HeicValidImage_ReturnsJpegByteArray()
+    public void GetJpegBytes_HeicValidImage_ReturnsJpegByteArray()
     {
         string filePath = Path.Combine(_dataDirectory!, FileNames.IMAGE_11_HEIC);
         byte[] buffer = File.ReadAllBytes(filePath);
 
-        BitmapImage image = _imageProcessingService!.LoadBitmapHeicThumbnailImage(buffer, Rotation.Rotate0, 100, 100);
+        ImageInfo imageInfo = _imageProcessingService!.LoadHeicThumbnailImage(buffer, ImageRotation.Rotate0, 100, 100);
 
-        byte[] imageBuffer = _imageProcessingService!.GetJpegBitmapImage(image);
+        byte[] imageBuffer = _imageProcessingService!.GetJpegBytes(imageInfo);
 
         Assert.That(imageBuffer, Is.Not.Null);
         Assert.That(imageBuffer, Is.Not.Empty);
@@ -93,12 +94,12 @@ public class ImageProcessingServiceTests
     }
 
     [Test]
-    public void GetJpegBitmapImage_InvalidImage_ThrowsInvalidOperationException()
+    public void GetJpegBytes_InvalidImage_ThrowsInvalidOperationException()
     {
-        BitmapImage image = new();
+        ImageInfo imageInfo = new([], 0, 0, ImageRotation.Rotate0);
 
         InvalidOperationException? exception = Assert.Throws<InvalidOperationException>(() =>
-            _imageProcessingService!.GetJpegBitmapImage(image));
+            _imageProcessingService!.GetJpegBytes(imageInfo));
 
         Assert.That(exception?.Message, Is.EqualTo("Operation is not valid due to the current state of the object."));
 
@@ -106,12 +107,12 @@ public class ImageProcessingServiceTests
     }
 
     [Test]
-    public void GetJpegBitmapImage_NullImage_ThrowsArgumentNullException()
+    public void GetJpegBytes_NullImage_ThrowsArgumentNullException()
     {
-        BitmapImage? invalidImage = null;
+        ImageInfo? invalidImageInfo = null;
 
         ArgumentNullException? exception = Assert.Throws<ArgumentNullException>(() =>
-            _imageProcessingService!.GetJpegBitmapImage(invalidImage!));
+            _imageProcessingService!.GetJpegBytes(invalidImageInfo!));
 
         Assert.That(exception?.Message, Is.EqualTo("Value cannot be null. (Parameter 'source')"));
 
@@ -121,12 +122,12 @@ public class ImageProcessingServiceTests
     [Test]
     [TestCase(FileNames.IMAGE_8_JPEG)]
     [TestCase(FileNames.IMAGE_1_JPG)]
-    public void GetPngBitmapImage_ValidImage_ReturnsPngByteArray(string fileName)
+    public void GetPngBytes_ValidImage_ReturnsPngByteArray(string fileName)
     {
         string filePath = Path.Combine(_dataDirectory!, fileName);
-        BitmapImage image = new(new(filePath));
+        ImageInfo imageInfo = _imageProcessingService!.LoadImageFromPath(filePath, ImageRotation.Rotate0);
 
-        byte[] imageBuffer = _imageProcessingService!.GetPngBitmapImage(image);
+        byte[] imageBuffer = _imageProcessingService!.GetPngBytes(imageInfo);
 
         Assert.That(imageBuffer, Is.Not.Null);
         Assert.That(imageBuffer, Is.Not.Empty);
@@ -150,14 +151,14 @@ public class ImageProcessingServiceTests
     }
 
     [Test]
-    public void GetPngBitmapImage_HeicValidImage_ReturnsPngByteArray()
+    public void GetPngBytes_HeicValidImage_ReturnsPngByteArray()
     {
         string filePath = Path.Combine(_dataDirectory!, FileNames.IMAGE_11_HEIC);
         byte[] buffer = File.ReadAllBytes(filePath);
 
-        BitmapImage image = _imageProcessingService!.LoadBitmapHeicThumbnailImage(buffer, Rotation.Rotate0, 100, 100);
+        ImageInfo imageInfo = _imageProcessingService!.LoadHeicThumbnailImage(buffer, ImageRotation.Rotate0, 100, 100);
 
-        byte[] imageBuffer = _imageProcessingService!.GetPngBitmapImage(image);
+        byte[] imageBuffer = _imageProcessingService!.GetPngBytes(imageInfo);
 
         Assert.That(imageBuffer, Is.Not.Null);
         Assert.That(imageBuffer, Is.Not.Empty);
@@ -181,12 +182,12 @@ public class ImageProcessingServiceTests
     }
 
     [Test]
-    public void GetPngBitmapImage_InvalidImage_ThrowsInvalidOperationException()
+    public void GetPngBytes_InvalidImage_ThrowsInvalidOperationException()
     {
-        BitmapImage image = new();
+        ImageInfo imageInfo = new([], 0, 0, ImageRotation.Rotate0);
 
         InvalidOperationException? exception =
-            Assert.Throws<InvalidOperationException>(() => _imageProcessingService!.GetPngBitmapImage(image));
+            Assert.Throws<InvalidOperationException>(() => _imageProcessingService!.GetPngBytes(imageInfo));
 
         Assert.That(exception?.Message, Is.EqualTo("Operation is not valid due to the current state of the object."));
 
@@ -194,12 +195,12 @@ public class ImageProcessingServiceTests
     }
 
     [Test]
-    public void GetPngBitmapImage_NullImage_ThrowsArgumentNullException()
+    public void GetPngBytes_NullImage_ThrowsArgumentNullException()
     {
-        BitmapImage? invalidImage = null;
+        ImageInfo? invalidImageInfo = null;
 
         ArgumentNullException? exception =
-            Assert.Throws<ArgumentNullException>(() => _imageProcessingService!.GetPngBitmapImage(invalidImage!));
+            Assert.Throws<ArgumentNullException>(() => _imageProcessingService!.GetPngBytes(invalidImageInfo!));
 
         Assert.That(exception?.Message, Is.EqualTo("Value cannot be null. (Parameter 'source')"));
 
@@ -209,12 +210,12 @@ public class ImageProcessingServiceTests
     [Test]
     [TestCase(FileNames.IMAGE_8_JPEG)]
     [TestCase(FileNames.IMAGE_1_JPG)]
-    public void GetGifBitmapImage_ValidImage_ReturnsGifByteArray(string fileName)
+    public void GetGifBytes_ValidImage_ReturnsGifByteArray(string fileName)
     {
         string filePath = Path.Combine(_dataDirectory!, fileName);
-        BitmapImage image = new(new(filePath));
+        ImageInfo imageInfo = _imageProcessingService!.LoadImageFromPath(filePath, ImageRotation.Rotate0);
 
-        byte[] imageBuffer = _imageProcessingService!.GetGifBitmapImage(image);
+        byte[] imageBuffer = _imageProcessingService!.GetGifBytes(imageInfo);
 
         Assert.That(imageBuffer, Is.Not.Null);
         Assert.That(imageBuffer, Is.Not.Empty);
@@ -238,14 +239,14 @@ public class ImageProcessingServiceTests
     }
 
     [Test]
-    public void GetGifBitmapImage_HeicValidImage_ReturnsGifByteArray()
+    public void GetGifBytes_HeicValidImage_ReturnsGifByteArray()
     {
         string filePath = Path.Combine(_dataDirectory!, FileNames.IMAGE_11_HEIC);
         byte[] buffer = File.ReadAllBytes(filePath);
 
-        BitmapImage image = _imageProcessingService!.LoadBitmapHeicThumbnailImage(buffer, Rotation.Rotate0, 100, 100);
+        ImageInfo imageInfo = _imageProcessingService!.LoadHeicThumbnailImage(buffer, ImageRotation.Rotate0, 100, 100);
 
-        byte[] imageBuffer = _imageProcessingService!.GetGifBitmapImage(image);
+        byte[] imageBuffer = _imageProcessingService!.GetGifBytes(imageInfo);
 
         Assert.That(imageBuffer, Is.Not.Null);
         Assert.That(imageBuffer, Is.Not.Empty);
@@ -269,12 +270,12 @@ public class ImageProcessingServiceTests
     }
 
     [Test]
-    public void GetGifBitmapImage_InvalidImage_ThrowsInvalidOperationException()
+    public void GetGifBytes_InvalidImage_ThrowsInvalidOperationException()
     {
-        BitmapImage image = new();
+        ImageInfo imageInfo = new([], 0, 0, ImageRotation.Rotate0);
 
         InvalidOperationException? exception =
-            Assert.Throws<InvalidOperationException>(() => _imageProcessingService!.GetGifBitmapImage(image));
+            Assert.Throws<InvalidOperationException>(() => _imageProcessingService!.GetGifBytes(imageInfo));
 
         Assert.That(exception?.Message, Is.EqualTo("Operation is not valid due to the current state of the object."));
 
@@ -282,12 +283,12 @@ public class ImageProcessingServiceTests
     }
 
     [Test]
-    public void GetGifBitmapImage_NullImage_ThrowsArgumentException()
+    public void GetGifBytes_NullImage_ThrowsArgumentException()
     {
-        BitmapImage? invalidImage = null;
+        ImageInfo? invalidImageInfo = null;
 
         ArgumentNullException? exception =
-            Assert.Throws<ArgumentNullException>(() => _imageProcessingService!.GetGifBitmapImage(invalidImage!));
+            Assert.Throws<ArgumentNullException>(() => _imageProcessingService!.GetGifBytes(invalidImageInfo!));
 
         Assert.That(exception?.Message, Is.EqualTo("Value cannot be null. (Parameter 'source')"));
 

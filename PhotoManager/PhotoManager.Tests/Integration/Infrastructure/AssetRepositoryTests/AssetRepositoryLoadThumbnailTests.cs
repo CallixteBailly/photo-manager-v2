@@ -1,4 +1,4 @@
-﻿using Directories = PhotoManager.Tests.Integration.Constants.Directories;
+using Directories = PhotoManager.Tests.Integration.Constants.Directories;
 using FileNames = PhotoManager.Tests.Integration.Constants.FileNames;
 using FileSize = PhotoManager.Tests.Integration.Constants.FileSize;
 using Hashes = PhotoManager.Tests.Integration.Constants.Hashes;
@@ -62,7 +62,7 @@ public class AssetRepositoryLoadThumbnailTests
             Folder = new() { Id = Guid.Empty, Path = "" }, // Initialised later
             FolderId = new("876283c6-780e-4ad5-975c-be63044c087a"),
             FileName = FileNames.IMAGE_1_JPG,
-            ImageRotation = Rotation.Rotate0,
+            ImageRotation = ImageRotation.Rotate0,
             Pixel = new()
             {
                 Asset = new() { Width = PixelWidthAsset.IMAGE_1_JPG, Height = PixelHeightAsset.IMAGE_1_JPG },
@@ -91,7 +91,7 @@ public class AssetRepositoryLoadThumbnailTests
     }
 
     [Test]
-    public void LoadThumbnail_ThumbnailExists_ReturnsBitmapImage()
+    public void LoadThumbnail_ThumbnailExists_ReturnsThumbnailData()
     {
         List<Reactive.Unit> assetsUpdatedEvents = [];
         IDisposable assetsUpdatedSubscription =
@@ -119,13 +119,13 @@ public class AssetRepositoryLoadThumbnailTests
             Assert.That(assetsUpdatedEvents, Has.Count.EqualTo(1));
             Assert.That(assetsUpdatedEvents[0], Is.EqualTo(Reactive.Unit.Default));
 
-            BitmapImage? bitmapImage = _testableAssetRepository!.LoadThumbnail(
+            byte[]? thumbnailData = _testableAssetRepository!.LoadThumbnail(
                 folderPath,
                 _asset1!.FileName,
                 _asset1.Pixel.Thumbnail.Width,
                 _asset1.Pixel.Thumbnail.Height);
 
-            Assert.That(bitmapImage, Is.Not.Null);
+            Assert.That(thumbnailData, Is.Not.Null);
 
             List<Asset> assets = _testableAssetRepository.GetCataloguedAssets();
             Assert.That(assets, Has.Count.EqualTo(1));
@@ -172,7 +172,7 @@ public class AssetRepositoryLoadThumbnailTests
     }
 
     [Test]
-    public void LoadThumbnail_AssetDoesNotExistButBinExists_ReturnsBitmapImage()
+    public void LoadThumbnail_AssetDoesNotExistButBinExists_ReturnsThumbnailData()
     {
         List<Reactive.Unit> assetsUpdatedEvents = [];
         IDisposable assetsUpdatedSubscription =
@@ -199,13 +199,13 @@ public class AssetRepositoryLoadThumbnailTests
             Dictionary<string, Dictionary<string, byte[]>> thumbnails = _testableAssetRepository!.GetThumbnails();
             Assert.That(thumbnails, Is.Empty);
 
-            BitmapImage? bitmapImage = _testableAssetRepository!.LoadThumbnail(
+            byte[]? thumbnailData = _testableAssetRepository!.LoadThumbnail(
                 _dataDirectory!,
                 _asset1!.FileName,
                 _asset1.Pixel.Thumbnail.Width,
                 _asset1.Pixel.Thumbnail.Height);
 
-            Assert.That(bitmapImage, Is.Not.Null);
+            Assert.That(thumbnailData, Is.Not.Null);
 
             List<Asset> assets = _testableAssetRepository.GetCataloguedAssets();
             Assert.That(assets, Is.Empty);
@@ -284,13 +284,13 @@ public class AssetRepositoryLoadThumbnailTests
             Dictionary<string, Dictionary<string, byte[]>> thumbnails = testableAssetRepository.GetThumbnails();
             Assert.That(thumbnails, Is.Empty);
 
-            BitmapImage? bitmapImage = testableAssetRepository.LoadThumbnail(
+            byte[]? thumbnailData = testableAssetRepository.LoadThumbnail(
                 _dataDirectory!,
                 _asset1!.FileName,
                 _asset1.Pixel.Thumbnail.Width,
                 _asset1.Pixel.Thumbnail.Height);
 
-            Assert.That(bitmapImage, Is.Null);
+            Assert.That(thumbnailData, Is.Null);
 
             List<Asset> assets = testableAssetRepository.GetCataloguedAssets();
             Assert.That(assets, Is.Empty);
@@ -346,7 +346,7 @@ public class AssetRepositoryLoadThumbnailTests
             Dictionary<string, Dictionary<string, byte[]>> thumbnails = _testableAssetRepository!.GetThumbnails();
             Assert.That(thumbnails, Is.Empty);
 
-            BitmapImage? bitmapImage = _testableAssetRepository!.LoadThumbnail(
+            byte[]? thumbnailData = _testableAssetRepository!.LoadThumbnail(
                 _dataDirectory!,
                 _asset1!.FileName,
                 _asset1.Pixel.Thumbnail.Width,
@@ -354,7 +354,7 @@ public class AssetRepositoryLoadThumbnailTests
 
             using (Assert.EnterMultipleScope())
             {
-                Assert.That(bitmapImage, Is.Null);
+                Assert.That(thumbnailData, Is.Null);
 
                 List<Asset> assets = _testableAssetRepository.GetCataloguedAssets();
                 Assert.That(assets, Is.Empty);
@@ -396,7 +396,7 @@ public class AssetRepositoryLoadThumbnailTests
     }
 
     [Test]
-    public void LoadThumbnail_FolderDoesNotExist_ReturnsBitmapImage()
+    public void LoadThumbnail_FolderDoesNotExist_ReturnsThumbnailData()
     {
         List<Reactive.Unit> assetsUpdatedEvents = [];
         IDisposable assetsUpdatedSubscription =
@@ -424,13 +424,13 @@ public class AssetRepositoryLoadThumbnailTests
             Assert.That(assetsUpdatedEvents, Has.Count.EqualTo(1));
             Assert.That(assetsUpdatedEvents[0], Is.EqualTo(Reactive.Unit.Default));
 
-            BitmapImage? bitmapImage = _testableAssetRepository!.LoadThumbnail(
+            byte[]? thumbnailData = _testableAssetRepository!.LoadThumbnail(
                 folderPath,
                 _asset1!.FileName,
                 _asset1.Pixel.Thumbnail.Width,
                 _asset1.Pixel.Thumbnail.Height);
 
-            Assert.That(bitmapImage, Is.Not.Null);
+            Assert.That(thumbnailData, Is.Not.Null);
 
             List<Asset> assets = _testableAssetRepository.GetCataloguedAssets();
             Assert.That(assets, Has.Count.EqualTo(1));
@@ -482,13 +482,13 @@ public class AssetRepositoryLoadThumbnailTests
             Dictionary<string, Dictionary<string, byte[]>> thumbnails = _testableAssetRepository!.GetThumbnails();
             Assert.That(thumbnails, Is.Empty);
 
-            BitmapImage? bitmapImage = _testableAssetRepository!.LoadThumbnail(
+            byte[]? thumbnailData = _testableAssetRepository!.LoadThumbnail(
                 _dataDirectory!,
                 _asset1!.FileName,
                 _asset1.Pixel.Thumbnail.Width,
                 _asset1.Pixel.Thumbnail.Height);
 
-            Assert.That(bitmapImage, Is.Null);
+            Assert.That(thumbnailData, Is.Null);
 
             List<Asset> assets = _testableAssetRepository.GetCataloguedAssets();
             Assert.That(assets, Is.Empty);
@@ -645,32 +645,32 @@ public class AssetRepositoryLoadThumbnailTests
             Assert.That(assetsUpdatedEvents, Has.Count.EqualTo(1));
             Assert.That(assetsUpdatedEvents[0], Is.EqualTo(Reactive.Unit.Default));
 
-            BitmapImage? bitmapImage1 = null;
-            BitmapImage? bitmapImage2 = null;
-            BitmapImage? bitmapImage3 = null;
+            byte[]? thumbnailData1 = null;
+            byte[]? thumbnailData2 = null;
+            byte[]? thumbnailData3 = null;
 
             // Simulate concurrent access
             Parallel.Invoke(
-                () => bitmapImage1 = _testableAssetRepository!.LoadThumbnail(
+                () => thumbnailData1 = _testableAssetRepository!.LoadThumbnail(
                     folderPath,
                     _asset1!.FileName,
                     _asset1.Pixel.Thumbnail.Width,
                     _asset1.Pixel.Thumbnail.Height),
-                () => bitmapImage2 = _testableAssetRepository!.LoadThumbnail(
+                () => thumbnailData2 = _testableAssetRepository!.LoadThumbnail(
                     folderPath,
                     _asset1!.FileName,
                     _asset1.Pixel.Thumbnail.Width,
                     _asset1.Pixel.Thumbnail.Height),
-                () => bitmapImage3 = _testableAssetRepository!.LoadThumbnail(
+                () => thumbnailData3 = _testableAssetRepository!.LoadThumbnail(
                     folderPath,
                     _asset1!.FileName,
                     _asset1.Pixel.Thumbnail.Width,
                     _asset1.Pixel.Thumbnail.Height)
             );
 
-            Assert.That(bitmapImage1, Is.Not.Null);
-            Assert.That(bitmapImage2, Is.Not.Null);
-            Assert.That(bitmapImage3, Is.Not.Null);
+            Assert.That(thumbnailData1, Is.Not.Null);
+            Assert.That(thumbnailData2, Is.Not.Null);
+            Assert.That(thumbnailData3, Is.Not.Null);
 
             List<Asset> assets = _testableAssetRepository.GetCataloguedAssets();
             Assert.That(assets, Has.Count.EqualTo(1));

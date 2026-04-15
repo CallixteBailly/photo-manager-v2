@@ -1,11 +1,10 @@
-﻿using PhotoManager.Application;
+using PhotoManager.Application;
 using PhotoManager.Domain;
 using PhotoManager.Domain.Comparers;
 using PhotoManager.UI.Models;
 using PhotoManager.UI.ViewModels.Enums;
 using System.Collections.ObjectModel;
 using System.Windows;
-using System.Windows.Media.Imaging;
 
 namespace PhotoManager.UI.ViewModels;
 
@@ -373,24 +372,24 @@ public class ApplicationViewModel : BaseViewModel
 
     public Folder[] GetSubFolders(Folder parentFolder) => _application.GetSubFolders(parentFolder);
 
-    public BitmapImage LoadBitmapImageFromPath()
+    public ImageInfo LoadImageFromPath()
     {
         if (CurrentAsset == null)
         {
             throw new NullReferenceException("CurrentAsset is null");
         }
 
-        return _application.LoadBitmapImageFromPath(CurrentAsset.FullPath, CurrentAsset.ImageRotation);
+        return _application.LoadImageFromPath(CurrentAsset.FullPath, CurrentAsset.ImageRotation);
     }
 
-    public BitmapImage LoadBitmapHeicImageFromPath()
+    public ImageInfo LoadHeicImageFromPath()
     {
         if (CurrentAsset == null)
         {
             throw new NullReferenceException("CurrentAsset is null");
         }
 
-        return _application.LoadBitmapHeicImageFromPath(CurrentAsset.FullPath, CurrentAsset.ImageRotation);
+        return _application.LoadHeicImageFromPath(CurrentAsset.FullPath, CurrentAsset.ImageRotation);
     }
 
     public void CalculateGlobalAssetsCounter()

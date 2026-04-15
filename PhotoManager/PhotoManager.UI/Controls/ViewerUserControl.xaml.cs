@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using PhotoManager.UI;
 using PhotoManager.UI.ViewModels;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
@@ -88,10 +89,16 @@ public partial class ViewerUserControl
         {
             bool isHeic = ViewModel.CurrentAsset.FileName.EndsWith(".heic", StringComparison.OrdinalIgnoreCase);
 
-            BitmapImage source = isHeic ? ViewModel.LoadBitmapHeicImageFromPath() : ViewModel.LoadBitmapImageFromPath();
+            ImageInfo imageInfo = isHeic ? ViewModel.LoadHeicImageFromPath() : ViewModel.LoadImageFromPath();
 
-            Image.Source = source;
-            BackgroundImage.Source = source;
+            BitmapImage bitmapImage = new();
+            bitmapImage.BeginInit();
+            bitmapImage.StreamSource = new MemoryStream(imageInfo.Data);
+            bitmapImage.Rotation = imageInfo.Rotation.ToRotation();
+            bitmapImage.EndInit();
+
+            Image.Source = bitmapImage;
+            BackgroundImage.Source = bitmapImage;
         }
         else
         {

@@ -1,4 +1,4 @@
-﻿using Directories = PhotoManager.Tests.Integration.Constants.Directories;
+using Directories = PhotoManager.Tests.Integration.Constants.Directories;
 using FileNames = PhotoManager.Tests.Integration.Constants.FileNames;
 using FileSize = PhotoManager.Tests.Integration.Constants.FileSize;
 using Hashes = PhotoManager.Tests.Integration.Constants.Hashes;
@@ -68,7 +68,7 @@ public class ApplicationLoadThumbnailTests
                 Modification = ModificationDate.Default
             },
             ThumbnailCreationDateTime = DateTime.Now,
-            ImageRotation = Rotation.Rotate0,
+            ImageRotation = ImageRotation.Rotate0,
             Hash = Hashes.IMAGE_1_DUPLICATE_JPG,
             Metadata = new()
             {
@@ -93,7 +93,7 @@ public class ApplicationLoadThumbnailTests
                 Modification = ModificationDate.Default
             },
             ThumbnailCreationDateTime = DateTime.Now,
-            ImageRotation = Rotation.Rotate0,
+            ImageRotation = ImageRotation.Rotate0,
             Hash = Hashes.IMAGE_9_PNG,
             Metadata = new()
             {
@@ -126,7 +126,7 @@ public class ApplicationLoadThumbnailTests
                 Modification = ModificationDate.Default
             },
             ThumbnailCreationDateTime = DateTime.Now,
-            ImageRotation = Rotation.Rotate0,
+            ImageRotation = ImageRotation.Rotate0,
             Hash = Hashes.IMAGE_9_DUPLICATE_PNG,
             Metadata = new()
             {
@@ -155,7 +155,7 @@ public class ApplicationLoadThumbnailTests
                 Modification = ModificationDate.Default
             },
             ThumbnailCreationDateTime = DateTime.Now,
-            ImageRotation = Rotation.Rotate0,
+            ImageRotation = ImageRotation.Rotate0,
             Hash = Hashes.IMAGE_11_HEIC,
             Metadata = new()
             {
@@ -180,7 +180,7 @@ public class ApplicationLoadThumbnailTests
                 Modification = DateTime.Now
             },
             ThumbnailCreationDateTime = DateTime.Now,
-            ImageRotation = Rotation.Rotate0,
+            ImageRotation = ImageRotation.Rotate0,
             Hash = Hashes.HOMER_JPG,
             Metadata = new()
             {
@@ -237,7 +237,7 @@ public class ApplicationLoadThumbnailTests
     }
 
     [Test]
-    public async Task LoadThumbnail_CataloguedAssets_SetsBitmapImageToTheAsset()
+    public async Task LoadThumbnail_CataloguedAssets_SetsImageInfoToTheAsset()
     {
         string assetsDirectory = Path.Combine(_dataDirectory!, $"{Directories.DUPLICATES}\\{Directories.NEW_FOLDER_2}");
 
@@ -337,7 +337,7 @@ public class ApplicationLoadThumbnailTests
     }
 
     [Test]
-    public async Task LoadThumbnail_CataloguedAssetFromVideo_SetsBitmapImageToTheAsset()
+    public async Task LoadThumbnail_CataloguedAssetFromVideo_SetsImageInfoToTheAsset()
     {
         string tempDirectory = Path.Combine(_dataDirectory!, Directories.TEMP_FOLDER);
 
@@ -414,7 +414,7 @@ public class ApplicationLoadThumbnailTests
     }
 
     [Test]
-    public void LoadThumbnail_ThumbnailExists_SetsBitmapImageToTheAsset()
+    public void LoadThumbnail_ThumbnailExists_SetsImageInfoToTheAsset()
     {
         string assetsDirectory = Path.Combine(_dataDirectory!, $"{Directories.DUPLICATES}\\{Directories.NEW_FOLDER_2}");
 
@@ -539,7 +539,7 @@ public class ApplicationLoadThumbnailTests
     }
 
     [Test]
-    public void LoadThumbnail_AssetDoesNotExistButBinExists_SetsBitmapImageToTheAsset()
+    public void LoadThumbnail_AssetDoesNotExistButBinExists_SetsImageInfoToTheAsset()
     {
         string assetsDirectory = Path.Combine(_dataDirectory!, $"{Directories.DUPLICATES}\\{Directories.NEW_FOLDER_2}");
 
@@ -621,7 +621,7 @@ public class ApplicationLoadThumbnailTests
 
     [Test]
     public void
-        LoadThumbnail_AssetDoesNotExistButBinExistsAndRemoveOldThumbnailsDictionaryEntriesIs0_DoesNotSetBitmapImageToTheAsset()
+        LoadThumbnail_AssetDoesNotExistButBinExistsAndRemoveOldThumbnailsDictionaryEntriesIs0_DoesNotSetImageInfoToTheAsset()
     {
         IConfigurationRoot configurationRootMock = Substitute.For<IConfigurationRoot>();
         configurationRootMock.GetDefaultMockConfig();
@@ -727,7 +727,7 @@ public class ApplicationLoadThumbnailTests
 
     [Test]
     public void
-        LoadThumbnail_AssetDoesNotExistButBinNotContainingTheAssetExists_DoesNotSetBitmapImageToTheAssetAndRemovesBlobAndWritesDbFile()
+        LoadThumbnail_AssetDoesNotExistButBinNotContainingTheAssetExists_DoesNotSetImageInfoToTheAssetAndRemovesBlobAndWritesDbFile()
     {
         string assetsDirectory = Path.Combine(_dataDirectory!, $"{Directories.DUPLICATES}\\{Directories.NEW_FOLDER_2}");
 
@@ -794,7 +794,7 @@ public class ApplicationLoadThumbnailTests
     }
 
     [Test]
-    public void LoadThumbnail_FolderDoesNotExist_SetsBitmapImageToTheAsset()
+    public void LoadThumbnail_FolderDoesNotExist_SetsImageInfoToTheAsset()
     {
         string assetsDirectory = Path.Combine(_dataDirectory!, $"{Directories.DUPLICATES}\\{Directories.NEW_FOLDER_2}");
 
@@ -868,7 +868,7 @@ public class ApplicationLoadThumbnailTests
     }
 
     [Test]
-    public void LoadThumbnail_AssetAndFolderDoNotExist_DoesNotSetBitmapImageToTheAsset()
+    public void LoadThumbnail_AssetAndFolderDoNotExist_DoesNotSetImageInfoToTheAsset()
     {
         string assetsDirectory = Path.Combine(_dataDirectory!, Directories.TEMP_EMPTY_FOLDER);
 
@@ -1002,7 +1002,7 @@ public class ApplicationLoadThumbnailTests
                     Modification = ModificationDate.Default
                 },
                 ThumbnailCreationDateTime = DateTime.Now,
-                ImageRotation = Rotation.Rotate0,
+                ImageRotation = ImageRotation.Rotate0,
                 Hash = Hashes.IMAGE_1_JPG,
                 Metadata = new()
                 {
@@ -1028,7 +1028,7 @@ public class ApplicationLoadThumbnailTests
     }
 
     [Test]
-    public void LoadThumbnail_ConcurrentAccess_BitmapImageAreSetToEachAssetSafely()
+    public void LoadThumbnail_ConcurrentAccess_ImageInfoAreSetToEachAssetSafely()
     {
         string assetsDirectory = Path.Combine(_dataDirectory!, $"{Directories.DUPLICATES}\\{Directories.NEW_FOLDER_2}");
 

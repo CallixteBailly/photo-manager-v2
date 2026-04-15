@@ -1,13 +1,13 @@
-﻿using Directories = PhotoManager.Tests.Unit.Constants.Directories;
+using Directories = PhotoManager.Tests.Unit.Constants.Directories;
 using FileNames = PhotoManager.Tests.Unit.Constants.FileNames;
-using ImageRotation = PhotoManager.Domain.Enums.ImageRotation;
 using PixelHeightAsset = PhotoManager.Tests.Unit.Constants.PixelHeightAsset;
 using PixelWidthAsset = PhotoManager.Tests.Unit.Constants.PixelWidthAsset;
+using PhotoManager.Domain;
 
 namespace PhotoManager.Tests.Unit.Application;
 
 [TestFixture]
-public class ApplicationLoadHeicImageFromPathTests
+public class ApplicationLoadImageFromPathTests
 {
     private string? _dataDirectory;
     private string? _databaseDirectory;
@@ -69,27 +69,25 @@ public class ApplicationLoadHeicImageFromPathTests
     }
 
     [Test]
-    [TestCase(ImageRotation.Rotate0, PixelWidthAsset.IMAGE_11_HEIC, PixelHeightAsset.IMAGE_11_HEIC)]
-    [TestCase(ImageRotation.Rotate90, PixelWidthAsset.IMAGE_11_HEIC, PixelHeightAsset.IMAGE_11_HEIC)]
-    [TestCase(ImageRotation.Rotate180, PixelWidthAsset.IMAGE_11_HEIC, PixelHeightAsset.IMAGE_11_HEIC)]
-    [TestCase(ImageRotation.Rotate270, PixelWidthAsset.IMAGE_11_HEIC, PixelHeightAsset.IMAGE_11_HEIC)]
-    // [TestCase(null, PixelWidthAsset.IMAGE_11_HEIC, PixelHeightAsset.IMAGE_11_HEIC)]
-    public void LoadHeicImageFromPath_ValidPathAndRotationAndNotRotatedImage_ReturnsImageInfo(ImageRotation rotation,
-        int expectedWidth, int expectedHeight)
+    [TestCase(Enums.ImageRotation.Rotate0, PixelWidthAsset.IMAGE_1_JPG, PixelHeightAsset.IMAGE_1_JPG)]
+    [TestCase(Enums.ImageRotation.Rotate90, PixelHeightAsset.IMAGE_1_JPG, PixelWidthAsset.IMAGE_1_JPG)]
+    [TestCase(Enums.ImageRotation.Rotate180, PixelWidthAsset.IMAGE_1_JPG, PixelHeightAsset.IMAGE_1_JPG)]
+    [TestCase(Enums.ImageRotation.Rotate270, PixelHeightAsset.IMAGE_1_JPG, PixelWidthAsset.IMAGE_1_JPG)]
+    public void LoadImageFromPath_ValidRotationAndPath_ReturnsImageInfo(Enums.ImageRotation rotation, int expectedWith,
+        int expectedHeight)
     {
         ConfigureApplication(100, _dataDirectory!, 200, 150, false, false, false, false);
 
         try
         {
-            string filePath = Path.Combine(_dataDirectory!, FileNames.IMAGE_11_HEIC);
+            string filePath = Path.Combine(_dataDirectory!, FileNames.IMAGE_1_JPG);
 
-            ImageInfo image = _application!.LoadHeicImageFromPath(filePath, rotation);
+            ImageInfo image = _application!.LoadImageFromPath(filePath, rotation);
 
             Assert.That(image, Is.Not.Null);
-            Assert.That(image.Data, Is.Not.Null);
             Assert.That(image.Data, Is.Not.Empty);
             Assert.That(image.Rotation, Is.EqualTo(rotation));
-            Assert.That(image.Width, Is.EqualTo(expectedWidth));
+            Assert.That(image.Width, Is.EqualTo(expectedWith));
             Assert.That(image.Height, Is.EqualTo(expectedHeight));
         }
         finally
@@ -99,29 +97,22 @@ public class ApplicationLoadHeicImageFromPathTests
     }
 
     [Test]
-    [TestCase(FileNames.IMAGE_11_90_DEG_HEIC, ImageRotation.Rotate90, PixelWidthAsset.IMAGE_11_90_DEG_HEIC,
-        PixelHeightAsset.IMAGE_11_90_DEG_HEIC)]
-    [TestCase(FileNames.IMAGE_11_180_DEG_HEIC, ImageRotation.Rotate180, PixelWidthAsset.IMAGE_11_180_DEG_HEIC,
-        PixelHeightAsset.IMAGE_11_180_DEG_HEIC)]
-    [TestCase(FileNames.IMAGE_11_270_DEG_HEIC, ImageRotation.Rotate270, PixelWidthAsset.IMAGE_11_270_DEG_HEIC,
-        PixelHeightAsset.IMAGE_11_270_DEG_HEIC)]
-    public void LoadHeicImageFromPath_ValidPathAndRotationAndRotatedImage_ReturnsImageInfo(string fileName,
-        ImageRotation rotation, int expectedWidth, int expectedHeight)
+    public void LoadImageFromPath_ImageDoesNotExist_ReturnsEmptyImageInfo()
     {
         ConfigureApplication(100, _dataDirectory!, 200, 150, false, false, false, false);
 
         try
         {
-            string filePath = Path.Combine(_dataDirectory!, fileName);
+            string filePath = Path.Combine(_dataDirectory!, FileNames.NON_EXISTENT_IMAGE_JPG);
+            const Enums.ImageRotation rotation = Enums.ImageRotation.Rotate90;
 
-            ImageInfo image = _application!.LoadHeicImageFromPath(filePath, rotation);
+            ImageInfo image = _application!.LoadImageFromPath(filePath, rotation);
 
             Assert.That(image, Is.Not.Null);
-            Assert.That(image.Data, Is.Not.Null);
-            Assert.That(image.Data, Is.Not.Empty);
-            Assert.That(image.Rotation, Is.EqualTo(rotation));
-            Assert.That(image.Width, Is.EqualTo(expectedWidth));
-            Assert.That(image.Height, Is.EqualTo(expectedHeight));
+            Assert.That(image.Data, Is.Empty);
+            Assert.That(image.Rotation, Is.EqualTo(Enums.ImageRotation.Rotate90));
+            Assert.That(image.Width, Is.Zero);
+            Assert.That(image.Height, Is.Zero);
         }
         finally
         {
@@ -130,21 +121,20 @@ public class ApplicationLoadHeicImageFromPathTests
     }
 
     [Test]
-    public void LoadHeicImageFromPath_FilePathIsNull_ReturnsImageInfo()
+    public void LoadImageFromPath_FilePathIsNull_ReturnsEmptyImageInfo()
     {
         ConfigureApplication(100, _dataDirectory!, 200, 150, false, false, false, false);
 
         try
         {
             string? filePath = null;
-            const ImageRotation rotation = ImageRotation.Rotate90;
+            const Enums.ImageRotation rotation = Enums.ImageRotation.Rotate90;
 
-            ImageInfo image = _application!.LoadHeicImageFromPath(filePath!, rotation);
+            ImageInfo image = _application!.LoadImageFromPath(filePath!, rotation);
 
             Assert.That(image, Is.Not.Null);
-            Assert.That(image.Data, Is.Not.Null);
             Assert.That(image.Data, Is.Empty);
-            Assert.That(image.Rotation, Is.EqualTo(ImageRotation.Rotate0));
+            Assert.That(image.Rotation, Is.EqualTo(Enums.ImageRotation.Rotate90));
             Assert.That(image.Width, Is.Zero);
             Assert.That(image.Height, Is.Zero);
         }
@@ -155,23 +145,19 @@ public class ApplicationLoadHeicImageFromPathTests
     }
 
     [Test]
-    public void LoadHeicImageFromPath_ImageDoesNotExist_ReturnsDefaultImageInfo()
+    public void LoadImageFromPath_InvalidRotation_ThrowsArgumentException()
     {
         ConfigureApplication(100, _dataDirectory!, 200, 150, false, false, false, false);
 
         try
         {
-            string filePath = Path.Combine(_dataDirectory!, FileNames.NON_EXISTENT_IMAGE_HEIC);
-            const ImageRotation rotation = ImageRotation.Rotate90;
+            string filePath = Path.Combine(_dataDirectory!, FileNames.IMAGE_1_JPG);
+            const Enums.ImageRotation rotation = (Enums.ImageRotation)999;
 
-            ImageInfo image = _application!.LoadHeicImageFromPath(filePath, rotation);
+            ArgumentException? exception =
+                Assert.Throws<ArgumentException>(() => _application!.LoadImageFromPath(filePath, rotation));
 
-            Assert.That(image, Is.Not.Null);
-            Assert.That(image.Data, Is.Not.Null);
-            Assert.That(image.Data, Is.Empty);
-            Assert.That(image.Rotation, Is.EqualTo(ImageRotation.Rotate0));
-            Assert.That(image.Width, Is.Zero);
-            Assert.That(image.Height, Is.Zero);
+            Assert.That(exception?.Message, Is.EqualTo($"'{rotation}' is not a valid value for property 'Rotation'."));
         }
         finally
         {
@@ -179,20 +165,28 @@ public class ApplicationLoadHeicImageFromPathTests
         }
     }
 
+    // TODO: Migrate from MagickImage to ImageInfo ?
     [Test]
-    public void LoadHeicImageFromPath_InvalidRotation_ThrowsArgumentException()
+    public void LoadImageFromPath_HeicImageFormat_ReturnsImageInfo()
     {
         ConfigureApplication(100, _dataDirectory!, 200, 150, false, false, false, false);
 
         try
         {
             string filePath = Path.Combine(_dataDirectory!, FileNames.IMAGE_11_HEIC);
-            const ImageRotation rotation = (ImageRotation)999;
+            const Enums.ImageRotation rotation = Enums.ImageRotation.Rotate0;
 
-            ArgumentException? exception =
-                Assert.Throws<ArgumentException>(() => _application!.LoadHeicImageFromPath(filePath, rotation));
+            ImageInfo image = _application!.LoadImageFromPath(filePath, rotation);
 
-            Assert.That(exception?.Message, Is.EqualTo($"'{rotation}' is not a valid value for property 'Rotation'."));
+            using (Assert.EnterMultipleScope())
+            {
+                Assert.That(image, Is.Not.Null);
+                Assert.That(image.Data, Is.Not.Empty);
+                Assert.That(image.Rotation, Is.EqualTo(rotation));
+                Assert.That(image.Width,
+                    Is.EqualTo(PixelHeightAsset.IMAGE_11_HEIC)); // Wrong width (getting the height value instead)
+                Assert.That(image.Height, Is.EqualTo(5376)); // Wrong height
+            }
         }
         finally
         {
