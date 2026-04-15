@@ -1,4 +1,4 @@
-﻿using System.Drawing.Imaging;
+﻿using ImageMagick;
 using Directories = PhotoManager.Tests.Integration.Constants.Directories;
 using FileNames = PhotoManager.Tests.Integration.Constants.FileNames;
 using FileSize = PhotoManager.Tests.Integration.Constants.FileSize;
@@ -145,12 +145,9 @@ public class ImageMetadataServiceTests
     [Test]
     public void GetExifOrientation_InvalidFormat_ReturnsCorruptedOrientationValue()
     {
-        Bitmap image = new(10, 10);
-
-        using (MemoryStream ms = new())
+        using (MagickImage image = new(10, 10, MagickColors.White))
         {
-            image.Save(ms, ImageFormat.Bmp); // Save as BMP to create an invalid format for JPEG
-            byte[] buffer = ms.ToArray(); // Buffer with invalid Exif Metadata (Metadata null)
+            byte[] buffer = image.ToByteArray(MagickFormat.Bmp); // BMP with no EXIF metadata
 
             ushort orientation = _imageMetadataService!.GetExifOrientation(
                 buffer,

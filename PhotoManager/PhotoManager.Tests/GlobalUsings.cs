@@ -16,5 +16,4 @@ global using PhotoManager.Tests.Integration.Infrastructure.AssetRepositoryTests;
 global using PhotoManager.UI.Converters;
 global using PhotoManager.UI.ViewModels;
 // System
-global using System.Drawing;
 global using System.IO;

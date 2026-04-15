@@ -135,7 +135,7 @@ public static class BitmapHelper
         }
     }
 
-    public static Bitmap? LoadBitmapFromPath(string imagePath)
+    public static byte[]? LoadBitmapFromPath(string imagePath)
     {
         if (!File.Exists(imagePath))
         {
@@ -143,13 +143,7 @@ public static class BitmapHelper
         }
 
         using MagickImage magickImage = new(imagePath);
-        byte[] imageData = magickImage.ToByteArray(MagickFormat.Jpg);
-
-        using MemoryStream stream = new(imageData);
-        using Bitmap bitmap = new(stream);
-        // Create a copy of the Bitmap
-        // When the using block for the MemoryStream is exited, the stream is disposed of, which lead to have a default bitmap at the end and to lose all the data.
-        return new Bitmap(bitmap);
+        return magickImage.ToByteArray(MagickFormat.Jpg);
     }
 
     public static byte[] GetJpegBytes(ImageInfo imageInfo)

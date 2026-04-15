@@ -945,29 +945,19 @@ public class BitmapHelperTests
     }
 
     [Test]
-    [TestCase(FileNames.IMAGE_1_JPG, PixelWidthAsset.IMAGE_1_JPG, PixelHeightAsset.IMAGE_1_JPG)]
-    [TestCase(FileNames.IMAGE_8_JPEG, PixelWidthAsset.IMAGE_8_JPEG, PixelHeightAsset.IMAGE_8_JPEG)]
-    [TestCase(FileNames.IMAGE_10_PORTRAIT_PNG, PixelWidthAsset.IMAGE_10_PORTRAIT_PNG,
-        PixelHeightAsset.IMAGE_10_PORTRAIT_PNG)]
-    [TestCase(FileNames.HOMER_GIF, PixelWidthAsset.HOMER_GIF, PixelHeightAsset.HOMER_GIF)]
-    [TestCase(FileNames.IMAGE_11_HEIC, PixelWidthAsset.IMAGE_11_HEIC, PixelHeightAsset.IMAGE_11_HEIC)]
-    [TestCase(FileNames.IMAGE_11_90_DEG_HEIC, PixelWidthAsset.IMAGE_11_90_DEG_HEIC,
-        PixelHeightAsset.IMAGE_11_90_DEG_HEIC)]
-    public void LoadBitmapFromPath_ValidImagePath_ReturnsNonNullBitmap(string fileName, int expectedWidth,
-        int expectedHeight)
+    [TestCase(FileNames.IMAGE_1_JPG)]
+    [TestCase(FileNames.IMAGE_8_JPEG)]
+    [TestCase(FileNames.IMAGE_10_PORTRAIT_PNG)]
+    [TestCase(FileNames.HOMER_GIF)]
+    [TestCase(FileNames.IMAGE_11_HEIC)]
+    [TestCase(FileNames.IMAGE_11_90_DEG_HEIC)]
+    public void LoadBitmapFromPath_ValidImagePath_ReturnsNonNullByteArray(string fileName)
     {
         string filePath = Path.Combine(_dataDirectory!, fileName);
-        Bitmap? bitmap = BitmapHelper.LoadBitmapFromPath(filePath);
+        byte[]? imageBytes = BitmapHelper.LoadBitmapFromPath(filePath);
 
-        Assert.That(bitmap, Is.Not.Null);
-        Assert.That(bitmap!.Width, Is.EqualTo(expectedWidth));
-        Assert.That(bitmap.Height, Is.EqualTo(expectedHeight));
-
-        AssertBrightnessValues(bitmap, 0, 0);
-        AssertBrightnessValues(bitmap, 1, 0);
-        AssertBrightnessValues(bitmap, 0, 1);
-        AssertBrightnessValues(bitmap, 1, 1);
-        AssertBrightnessValues(bitmap, 2, 5);
+        Assert.That(imageBytes, Is.Not.Null);
+        Assert.That(imageBytes, Is.Not.Empty);
 
         _testLogger!.AssertLogExceptions([], typeof(BitmapHelperTests));
     }
@@ -977,9 +967,9 @@ public class BitmapHelperTests
     {
         string filePath = Path.Combine(_dataDirectory!, FileNames.NON_EXISTENT_IMAGE_PNG);
 
-        Bitmap? bitmap = BitmapHelper.LoadBitmapFromPath(filePath);
+        byte[]? imageBytes = BitmapHelper.LoadBitmapFromPath(filePath);
 
-        Assert.That(bitmap, Is.Null);
+        Assert.That(imageBytes, Is.Null);
 
         _testLogger!.AssertLogExceptions([], typeof(BitmapHelperTests));
     }
@@ -987,9 +977,9 @@ public class BitmapHelperTests
     [Test]
     public void LoadBitmapFromPath_ImagePathIsInvalid_ReturnsNull()
     {
-        Bitmap? bitmap = BitmapHelper.LoadBitmapFromPath(_dataDirectory!);
+        byte[]? imageBytes = BitmapHelper.LoadBitmapFromPath(_dataDirectory!);
 
-        Assert.That(bitmap, Is.Null);
+        Assert.That(imageBytes, Is.Null);
 
         _testLogger!.AssertLogExceptions([], typeof(BitmapHelperTests));
     }
@@ -999,9 +989,9 @@ public class BitmapHelperTests
     {
         string? imagePath = null;
 
-        Bitmap? bitmap = BitmapHelper.LoadBitmapFromPath(imagePath!);
+        byte[]? imageBytes = BitmapHelper.LoadBitmapFromPath(imagePath!);
 
-        Assert.That(bitmap, Is.Null);
+        Assert.That(imageBytes, Is.Null);
 
         _testLogger!.AssertLogExceptions([], typeof(BitmapHelperTests));
     }

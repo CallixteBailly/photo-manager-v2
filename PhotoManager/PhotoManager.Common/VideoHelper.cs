@@ -1,5 +1,6 @@
 using FFMpegCore;
 using Microsoft.Extensions.Logging;
+using System.Runtime.InteropServices;
 
 namespace PhotoManager.Common;
 
@@ -61,10 +62,8 @@ public static class VideoHelper
         {
             string firstFrameVideoPath = Path.Combine(destinationPath, firstFrameVideoName);
 
-            // Set the path to the extracted ffmpeg.exe, ffplay.exe, and ffprobe.exe files
-            string ffmpegBinPath = GetCommonProjectPath();
-
-            GlobalFFOptions.Configure(options => options.BinaryFolder = ffmpegBinPath);
+            // Set the path to ffmpeg/ffprobe binaries (cross-platform)
+            ConfigureFFmpegPath();
 
             // Use FFMpegCore to extract the first frame
             FFMpegArguments
@@ -96,17 +95,19 @@ public static class VideoHelper
     }
 
     /// <summary>
-    /// Gets the path where are stored the Ffmpeg binaries, resolving correctly for both test and runtime contexts.
+    /// Configures the ffmpeg binary path based on the current OS.
+    /// Uses system ffmpeg if available, otherwise falls back to bundled binaries.
     /// </summary>
-    /// <returns>The path to the Ffmpeg binaries.</returns>
-    private static string GetCommonProjectPath()
+    private static void ConfigureFFmpegPath()
     {
-        string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-
-        // Traverse up the directory structure until you find the "PhotoManager.Common" folder
-        string commonProjectPath = FindProjectDirectory(baseDirectory, "PhotoManager.Common");
-
-        return Path.Combine(commonProjectPath, "Ffmpeg", "Bin");
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            string commonProjectPath = FindProjectDirectory(baseDirectory, "PhotoManager.Common");
+            string ffmpegBinPath = Path.Combine(commonProjectPath, "Ffmpeg", "Bin");
+            GlobalFFOptions.Configure(options => options.BinaryFolder = ffmpegBinPath);
+        }
+        // On Linux and macOS, rely on system-installed ffmpeg (found via PATH)
     }
 
     private static string FindProjectDirectory(string startPath, string projectFolderName)
