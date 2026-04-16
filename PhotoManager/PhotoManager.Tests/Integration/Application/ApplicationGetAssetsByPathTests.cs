@@ -817,19 +817,19 @@ public class ApplicationGetAssetsByPathTests
     }
 
     [Test]
-    public void GetAssetsByPath_ThumbnailsAndFolderExistButLoadBitmapThumbnailImageReturnsNull_ReturnsEmptyArray()
+    public void GetAssetsByPath_ThumbnailsAndFolderExistButLoadThumbnailImageReturnsNull_ReturnsEmptyArray()
     {
         IConfigurationRoot configurationRootMock = Substitute.For<IConfigurationRoot>();
         configurationRootMock.GetDefaultMockConfig();
 
         UserConfigurationService userConfigurationService = new(configurationRootMock);
 
-        BitmapImage? bitmapImage = null;
+        ImageInfo? bitmapImage = null;
         IPathProviderService pathProviderServiceMock = Substitute.For<IPathProviderService>();
         pathProviderServiceMock.ResolveDataDirectory().Returns(_databasePath!);
 
         IImageProcessingService imageProcessingServiceMock = Substitute.For<IImageProcessingService>();
-        imageProcessingServiceMock.LoadBitmapThumbnailImage(Arg.Any<byte[]>(), Arg.Any<int>(), Arg.Any<int>())
+        imageProcessingServiceMock.LoadThumbnailImage(Arg.Any<byte[]>(), Arg.Any<int>(), Arg.Any<int>())
             .Returns(bitmapImage!);
 
         Database database = new(new ObjectListStorage(), new BlobStorage(), new BackupStorage(),
@@ -900,7 +900,7 @@ public class ApplicationGetAssetsByPathTests
 
             Assert.That(assets, Is.Empty);
 
-            imageProcessingServiceMock.Received(1).LoadBitmapThumbnailImage(
+            imageProcessingServiceMock.Received(1).LoadThumbnailImage(
                 Arg.Any<byte[]>(), Arg.Any<int>(), Arg.Any<int>());
 
             Assert.That(assetsUpdatedEvents, Has.Count.EqualTo(1));
@@ -1295,7 +1295,7 @@ public class ApplicationGetAssetsByPathTests
         pathProviderServiceMock.ResolveDataDirectory().Returns(_databasePath!);
 
         IImageProcessingService imageProcessingServiceMock = Substitute.For<IImageProcessingService>();
-        imageProcessingServiceMock.LoadBitmapThumbnailImage(Arg.Any<byte[]>(), Arg.Any<int>(), Arg.Any<int>())
+        imageProcessingServiceMock.LoadThumbnailImage(Arg.Any<byte[]>(), Arg.Any<int>(), Arg.Any<int>())
             .Throws(new Exception());
 
         Database database = new(new ObjectListStorage(), new BlobStorage(), new BackupStorage(),
@@ -1382,7 +1382,7 @@ public class ApplicationGetAssetsByPathTests
             Assert.That(assets[0].FileName, Is.EqualTo(_asset1.FileName));
             Assert.That(assets[1].FileName, Is.EqualTo(_asset2.FileName));
 
-            imageProcessingServiceMock.Received(1).LoadBitmapThumbnailImage(
+            imageProcessingServiceMock.Received(1).LoadThumbnailImage(
                 Arg.Any<byte[]>(), Arg.Any<int>(), Arg.Any<int>());
 
             Assert.That(assetsUpdatedEvents, Has.Count.EqualTo(2));
@@ -1498,8 +1498,8 @@ public class ApplicationGetAssetsByPathTests
         bool assetContainsThumbnail = _testableAssetRepository!.ContainsThumbnail(directory, fileName);
         Assert.That(assetContainsThumbnail, Is.True);
 
-        BitmapImage? assetBitmapImage =
+        byte[]? assetThumbnail =
             _testableAssetRepository.LoadThumbnail(directory, fileName, thumbnailWidth, thumbnailHeight);
-        Assert.That(assetBitmapImage, Is.Not.Null);
+        Assert.That(assetThumbnail, Is.Not.Null);
     }
 }

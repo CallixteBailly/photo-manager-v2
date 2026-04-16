@@ -1,4 +1,5 @@
-﻿using PhotoManager.Domain;
+﻿using PhotoManager.Common;
+using PhotoManager.Domain;
 using System.Reflection;
 
 namespace PhotoManager.Application;
@@ -18,8 +19,8 @@ public interface IApplication
     bool GetSyncAssetsEveryXMinutes();
     string GetExemptedFolderPath();
     AboutInformation GetAboutInformation(Assembly assembly);
-    ImageInfo LoadImageFromPath(string imagePath, Enums.ImageRotation rotation);
-    ImageInfo LoadHeicImageFromPath(string imagePath, Enums.ImageRotation rotation);
+    ImageInfo LoadImageFromPath(string imagePath, ImageRotation rotation);
+    ImageInfo LoadHeicImageFromPath(string imagePath, ImageRotation rotation);
     bool FileExists(string fullPath);
     int GetTotalFilesCount();
     bool MoveAssets(Asset[] assets, Folder destinationFolder, bool preserveOriginalFiles);

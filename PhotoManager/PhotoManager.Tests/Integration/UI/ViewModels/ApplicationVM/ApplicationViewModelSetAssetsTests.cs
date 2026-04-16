@@ -331,10 +331,10 @@ public class ApplicationViewModelSetAssetsTests
             _asset3 = _asset3!.WithFolder(folder);
             _asset4 = _asset4!.WithFolder(folder);
 
-            _asset1.ImageData = new();
-            _asset2.ImageData = new();
-            _asset3.ImageData = new();
-            _asset4.ImageData = new();
+            _asset1.ImageData = [];
+            _asset2.ImageData = [];
+            _asset3.ImageData = [];
+            _asset4.ImageData = [];
 
             const string expectedStatusMessage = "The catalog process has ended.";
             string expectedAppTitle =

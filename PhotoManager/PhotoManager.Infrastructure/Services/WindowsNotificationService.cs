@@ -1,4 +1,3 @@
-using PhotoManager.Domain.Interfaces;
 
 namespace PhotoManager.Infrastructure.Services;
 

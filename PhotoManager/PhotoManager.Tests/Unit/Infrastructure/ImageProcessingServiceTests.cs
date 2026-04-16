@@ -1,6 +1,5 @@
 using Directories = PhotoManager.Tests.Unit.Constants.Directories;
 using FileNames = PhotoManager.Tests.Unit.Constants.FileNames;
-using ImageRotation = PhotoManager.Domain.Enums.ImageRotation;
 using PixelHeightAsset = PhotoManager.Tests.Unit.Constants.PixelHeightAsset;
 using PixelWidthAsset = PhotoManager.Tests.Unit.Constants.PixelWidthAsset;
 

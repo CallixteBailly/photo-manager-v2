@@ -2,7 +2,6 @@ using Directories = PhotoManager.Tests.Integration.Constants.Directories;
 using FileNames = PhotoManager.Tests.Integration.Constants.FileNames;
 using FileSize = PhotoManager.Tests.Integration.Constants.FileSize;
 using Hashes = PhotoManager.Tests.Integration.Constants.Hashes;
-using ImageRotation = PhotoManager.Domain.Enums.ImageRotation;
 using ModificationDate = PhotoManager.Tests.Integration.Constants.ModificationDate;
 using PixelHeightAsset = PhotoManager.Tests.Integration.Constants.PixelHeightAsset;
 using PixelWidthAsset = PhotoManager.Tests.Integration.Constants.PixelWidthAsset;
@@ -12,7 +11,7 @@ using ThumbnailWidthAsset = PhotoManager.Tests.Integration.Constants.ThumbnailWi
 namespace PhotoManager.Tests.Integration.Application;
 
 [TestFixture]
-public class ApplicationLoadBitmapImageFromPathTests
+public class ApplicationLoadImageFromPathTests
 {
     private string? _dataDirectory;
     private string? _databaseDirectory;

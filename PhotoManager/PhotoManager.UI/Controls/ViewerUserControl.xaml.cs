@@ -1,9 +1,10 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using PhotoManager.UI;
 using PhotoManager.UI.ViewModels;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using PhotoManager.Common;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;

@@ -1,6 +1,5 @@
 ﻿// Projects
 global using PhotoManager.Common;
-global using PhotoManager.Domain.Enums;
 global using PhotoManager.Domain.Interfaces;
 global using PhotoManager.Domain.UserConfigurationSettings;
 // System

@@ -1,4 +1,4 @@
-namespace PhotoManager.Domain.Enums;
+namespace PhotoManager.Common;
 
 public enum ImageRotation
 {

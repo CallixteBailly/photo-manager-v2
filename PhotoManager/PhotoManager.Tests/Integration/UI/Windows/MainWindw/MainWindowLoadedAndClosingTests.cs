@@ -84,7 +84,7 @@ public class MainWindowLoadedAndClosingTests
             ThumbnailCreationDateTime = actualDate,
             ImageRotation = Rotation.Rotate0,
             Hash = Hashes.IMAGE_1_DUPLICATE_JPG,
-            ImageData = new(),
+            ImageData = [],
             Metadata = new()
             {
                 Corrupted = new() { IsTrue = false, Message = null },
@@ -110,7 +110,7 @@ public class MainWindowLoadedAndClosingTests
             ThumbnailCreationDateTime = actualDate,
             ImageRotation = Rotation.Rotate0,
             Hash = Hashes.IMAGE_9_PNG,
-            ImageData = new(),
+            ImageData = [],
             Metadata = new()
             {
                 Corrupted = new() { IsTrue = false, Message = null },
@@ -144,7 +144,7 @@ public class MainWindowLoadedAndClosingTests
             ThumbnailCreationDateTime = actualDate,
             ImageRotation = Rotation.Rotate0,
             Hash = Hashes.IMAGE_9_DUPLICATE_PNG,
-            ImageData = new(),
+            ImageData = [],
             Metadata = new()
             {
                 Corrupted = new() { IsTrue = false, Message = null },
@@ -174,7 +174,7 @@ public class MainWindowLoadedAndClosingTests
             ThumbnailCreationDateTime = actualDate,
             ImageRotation = Rotation.Rotate0,
             Hash = Hashes.IMAGE_11_HEIC,
-            ImageData = new(),
+            ImageData = [],
             Metadata = new()
             {
                 Corrupted = new() { IsTrue = false, Message = null },

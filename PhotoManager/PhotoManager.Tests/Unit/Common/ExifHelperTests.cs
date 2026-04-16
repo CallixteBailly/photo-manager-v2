@@ -136,7 +136,7 @@ public class ExifHelperTests
     [Test]
     public void GetExifOrientation_InvalidFormat_ReturnsCorruptedOrientationValue()
     {
-        using (MagickImage image = new(10, 10, MagickColors.White))
+        using (MagickImage image = new(MagickColors.White, 10, 10))
         {
             byte[] buffer = image.ToByteArray(MagickFormat.Bmp); // BMP with no EXIF metadata
 

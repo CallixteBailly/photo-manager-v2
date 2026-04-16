@@ -1,6 +1,5 @@
 using Directories = PhotoManager.Tests.Unit.Constants.Directories;
 using FileNames = PhotoManager.Tests.Unit.Constants.FileNames;
-using PhotoManager.Domain.Enums;
 
 namespace PhotoManager.Tests.Integration.Infrastructure;
 
@@ -370,7 +369,7 @@ public class ImageProcessingServiceTests
     {
         try
         {
-            using (Image.FromFile(filePath))
+            using (new ImageMagick.MagickImage(filePath))
             {
                 // The image is successfully loaded; consider it valid
                 return true;

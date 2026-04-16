@@ -1,4 +1,4 @@
-using PhotoManager.Domain.Enums;
+using PhotoManager.Common;
 using System.Windows.Media.Imaging;
 
 namespace PhotoManager.UI;

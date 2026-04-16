@@ -1,13 +1,12 @@
 using ImageMagick;
 using Microsoft.Extensions.Logging;
-using PhotoManager.Domain;
 
 namespace PhotoManager.Common;
 
 public static class BitmapHelper
 {
     // From CatalogAssetsService for CreateAsset() to get the originalImage
-    public static ImageInfo LoadOriginalImage(byte[] buffer, Enums.ImageRotation rotation, ILogger logger)
+    public static ImageInfo LoadOriginalImage(byte[] buffer, ImageRotation rotation, ILogger logger)
     {
         try
         {
@@ -26,7 +25,7 @@ public static class BitmapHelper
     }
 
     // From CatalogAssetsService for CreateAsset() to get the thumbnailImage
-    public static ImageInfo LoadThumbnailImage(byte[] buffer, Enums.ImageRotation rotation, int width, int height,
+    public static ImageInfo LoadThumbnailImage(byte[] buffer, ImageRotation rotation, int width, int height,
         ILogger logger)
     {
         try
@@ -47,7 +46,7 @@ public static class BitmapHelper
     }
 
     // From CatalogAssetsService for CreateAsset() to get the originalImage for HEIC
-    public static ImageInfo LoadHeicOriginalImage(byte[] buffer, Enums.ImageRotation rotation, ILogger logger)
+    public static ImageInfo LoadHeicOriginalImage(byte[] buffer, ImageRotation rotation, ILogger logger)
     {
         try
         {
@@ -64,7 +63,7 @@ public static class BitmapHelper
     }
 
     // From CatalogAssetsService for CreateAsset() to get the thumbnailImage for HEIC
-    public static ImageInfo LoadHeicThumbnailImage(byte[] buffer, Enums.ImageRotation rotation, int width, int height,
+    public static ImageInfo LoadHeicThumbnailImage(byte[] buffer, ImageRotation rotation, int width, int height,
         ILogger logger)
     {
         try
@@ -83,7 +82,7 @@ public static class BitmapHelper
     }
 
     // From ShowImage() in ViewerUserControl to open the image in fullscreen mode
-    public static ImageInfo LoadImageFromPath(string imagePath, Enums.ImageRotation rotation)
+    public static ImageInfo LoadImageFromPath(string imagePath, ImageRotation rotation)
     {
         if (!File.Exists(imagePath))
         {
@@ -97,7 +96,7 @@ public static class BitmapHelper
     }
 
     // From ShowImage() in ViewerUserControl to open the image in fullscreen mode for Heic
-    public static ImageInfo LoadHeicImageFromPath(string imagePath, Enums.ImageRotation rotation, ILogger logger)
+    public static ImageInfo LoadHeicImageFromPath(string imagePath, ImageRotation rotation, ILogger logger)
     {
         if (!File.Exists(imagePath))
         {
@@ -126,7 +125,7 @@ public static class BitmapHelper
             using MagickImage magickImage = new(buffer);
             magickImage.Resize((uint)width, (uint)height);
             byte[] imageData = magickImage.ToByteArray(MagickFormat.Bmp);
-            return new ImageInfo(imageData, width, height, Enums.ImageRotation.Rotate0);
+            return new ImageInfo(imageData, width, height, ImageRotation.Rotate0);
         }
         catch (Exception ex) when (ex is not ArgumentException and not ArgumentNullException and not OverflowException)
         {
@@ -168,13 +167,13 @@ public static class BitmapHelper
         return magickImage.ToByteArray(format);
     }
 
-    private static void MagickImageApplyRotation(MagickImage magickImage, Enums.ImageRotation rotation)
+    private static void MagickImageApplyRotation(MagickImage magickImage, ImageRotation rotation)
     {
         int rotationAngle = rotation switch
         {
-            Enums.ImageRotation.Rotate90 => 90,
-            Enums.ImageRotation.Rotate180 => 180,
-            Enums.ImageRotation.Rotate270 => 270,
+            ImageRotation.Rotate90 => 90,
+            ImageRotation.Rotate180 => 180,
+            ImageRotation.Rotate270 => 270,
             _ => 0
         };
 

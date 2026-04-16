@@ -83,8 +83,9 @@ public static class CatalogAssetsAsyncAsserts
 
         Assert.That(assetsFromDatabase, Has.Count.EqualTo(assetsFromRepository.Count));
 
-        Dictionary<Asset, Folder> assetToFolderMapping = folderToAssetsMapping.SelectMany(kv =>
-            kv.Value.Select(a => (Asset: a, Folder: kv.Key))).ToDictionary(x => x.Asset, x => x.Folder);
+        Dictionary<Asset, Folder> assetToFolderMapping = folderToAssetsMapping
+            .SelectMany(kv => kv.Value.Select(a => (Asset: a, Folder: kv.Key)))
+            .ToDictionary(x => x.Asset, x => x.Folder);
 
         foreach (Asset assetFromDatabase in assetsFromDatabase)
         {
@@ -353,8 +354,9 @@ public static class CatalogAssetsAsyncAsserts
 
         Assert.That(thumbnailsTotalCount, Is.EqualTo(assetsFromRepository.Count));
 
-        Dictionary<Asset, Folder> assetToFolderMapping = folderToAssetsMapping.SelectMany(kv =>
-            kv.Value.Select(a => (Asset: a, Folder: kv.Key))).ToDictionary(x => x.Asset, x => x.Folder);
+        Dictionary<Asset, Folder> assetToFolderMapping = folderToAssetsMapping
+            .SelectMany(kv => kv.Value.Select(a => (Asset: a, Folder: kv.Key)))
+            .ToDictionary(x => x.Asset, x => x.Folder);
 
         for (int i = 0; i < assetsFromRepository.Count; i++)
         {

@@ -73,7 +73,7 @@ public class FindDuplicatedAssetsViewModelAllDuplicatesTests
             ThumbnailCreationDateTime = actualDate,
             ImageRotation = Rotation.Rotate0,
             Hash = Hashes.IMAGE_1_JPG,
-            ImageData = new(),
+            ImageData = [],
             Metadata = new()
             {
                 Corrupted = new() { IsTrue = false, Message = null },
@@ -107,7 +107,7 @@ public class FindDuplicatedAssetsViewModelAllDuplicatesTests
             ThumbnailCreationDateTime = actualDate,
             ImageRotation = Rotation.Rotate0,
             Hash = Hashes.IMAGE_2_DUPLICATED_JPG,
-            ImageData = new(),
+            ImageData = [],
             Metadata = new()
             {
                 Corrupted = new() { IsTrue = false, Message = null },
@@ -133,7 +133,7 @@ public class FindDuplicatedAssetsViewModelAllDuplicatesTests
             ThumbnailCreationDateTime = actualDate,
             ImageRotation = Rotation.Rotate0,
             Hash = Hashes.IMAGE_2_JPG,
-            ImageData = new(),
+            ImageData = [],
             Metadata = new()
             {
                 Corrupted = new() { IsTrue = false, Message = null },
@@ -159,7 +159,7 @@ public class FindDuplicatedAssetsViewModelAllDuplicatesTests
             ThumbnailCreationDateTime = actualDate,
             ImageRotation = Rotation.Rotate0,
             Hash = Hashes.IMAGE_9_PNG,
-            ImageData = new(),
+            ImageData = [],
             Metadata = new()
             {
                 Corrupted = new() { IsTrue = false, Message = null },
@@ -189,7 +189,7 @@ public class FindDuplicatedAssetsViewModelAllDuplicatesTests
             ThumbnailCreationDateTime = actualDate,
             ImageRotation = Rotation.Rotate0,
             Hash = Hashes.IMAGE_11_HEIC,
-            ImageData = new(),
+            ImageData = [],
             Metadata = new()
             {
                 Corrupted = new() { IsTrue = false, Message = null },
@@ -1046,7 +1046,7 @@ public class FindDuplicatedAssetsViewModelAllDuplicatesTests
             DuplicatedSetViewModel expectedDuplicatedAssetSet5 = [];
 
             // Because _asset6 became the CurrentAsset so the ImageData has been loaded (was null because not in the current directory)
-            _asset6.ImageData = new();
+            _asset6.ImageData = [];
 
             // Image 1
             DuplicatedAssetViewModel expectedDuplicatedAssetViewModel1 = new()
@@ -1185,10 +1185,10 @@ public class FindDuplicatedAssetsViewModelAllDuplicatesTests
             _findDuplicatedAssetsViewModel!.DuplicatedAssetSetsPosition = 4;
 
             // Because _asset11 became the CurrentAsset so the ImageData has been loaded (was null because not in the current directory)
-            _asset11.ImageData = new();
+            _asset11.ImageData = [];
 
             // Because _asset12 will become the CurrentAsset so the ImageData will be loaded (was null because not in the current directory)
-            _asset12.ImageData = new();
+            _asset12.ImageData = [];
 
             _findDuplicatedAssetsViewModel!.CollapseAssets(
             [
@@ -2105,7 +2105,7 @@ public class FindDuplicatedAssetsViewModelAllDuplicatesTests
             _findDuplicatedAssetsViewModel!.DuplicatedAssetPosition = 1;
 
             // Because _asset6 became the CurrentAsset so the ImageData has been loaded (was null because not in the current directory)
-            _asset6.ImageData = new();
+            _asset6.ImageData = [];
 
             CheckAfterChanges(
                 _findDuplicatedAssetsViewModel!,
@@ -2276,7 +2276,7 @@ public class FindDuplicatedAssetsViewModelAllDuplicatesTests
             // Sixth GetDuplicatedAssets
 
             // Because _asset11 became the CurrentAsset so the ImageData has been loaded (was null because not in the current directory)
-            _asset11.ImageData = new();
+            _asset11.ImageData = [];
 
             duplicatedAssets =
                 _findDuplicatedAssetsViewModel!.GetDuplicatedAssets(

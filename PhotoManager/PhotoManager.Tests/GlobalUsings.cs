@@ -4,6 +4,7 @@ global using NSubstitute;
 global using NSubstitute.ExceptionExtensions;
 global using NUnit.Framework;
 // Projects
+global using Rotation = PhotoManager.Common.ImageRotation;
 global using PhotoManager.Common;
 global using PhotoManager.Domain;
 global using PhotoManager.Domain.Interfaces;

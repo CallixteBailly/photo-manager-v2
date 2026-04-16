@@ -64,7 +64,7 @@ public class MainWindowDeleteAssetsTests
             ThumbnailCreationDateTime = DateTime.Now,
             ImageRotation = Rotation.Rotate0,
             Hash = Hashes.IMAGE_1_JPG,
-            ImageData = new(),
+            ImageData = [],
             Metadata = new()
             {
                 Corrupted = new() { IsTrue = false, Message = null },
@@ -90,7 +90,7 @@ public class MainWindowDeleteAssetsTests
             ThumbnailCreationDateTime = DateTime.Now,
             ImageRotation = Rotation.Rotate0,
             Hash = Hashes.IMAGE_9_PNG,
-            ImageData = new(),
+            ImageData = [],
             Metadata = new()
             {
                 Corrupted = new() { IsTrue = false, Message = null },

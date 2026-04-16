@@ -51,7 +51,7 @@ public class ApplicationViewModelSetAssetsTests
                 Thumbnail = new() { Width = ThumbnailWidthAsset.IMAGE_1_JPG, Height = ThumbnailHeightAsset.IMAGE_1_JPG }
             },
             Hash = string.Empty,
-            ImageData = new(),
+            ImageData = [],
             FileProperties = new()
             {
                 Size = 2020,
@@ -76,7 +76,7 @@ public class ApplicationViewModelSetAssetsTests
                 Thumbnail = new() { Width = ThumbnailWidthAsset.IMAGE_2_JPG, Height = ThumbnailHeightAsset.IMAGE_2_JPG }
             },
             Hash = string.Empty,
-            ImageData = new(),
+            ImageData = [],
             FileProperties = new()
             {
                 Size = 2048,
@@ -101,7 +101,7 @@ public class ApplicationViewModelSetAssetsTests
                 Thumbnail = new() { Width = ThumbnailWidthAsset.IMAGE_3_JPG, Height = ThumbnailHeightAsset.IMAGE_3_JPG }
             },
             Hash = string.Empty,
-            ImageData = new(),
+            ImageData = [],
             FileProperties = new()
             {
                 Size = 2000,

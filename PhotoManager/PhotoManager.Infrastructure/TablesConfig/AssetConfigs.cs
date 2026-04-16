@@ -39,7 +39,7 @@ public static class AssetConfigs
             FolderId = new(values[0]),
             Folder = new() { Id = Guid.Empty, Path = "" }, // Initialised later
             FileName = values[1],
-            ImageRotation = (Rotation)Enum.Parse(typeof(Rotation), values[2]),
+            ImageRotation = (ImageRotation)Enum.Parse(typeof(ImageRotation), values[2]),
             Pixel = new()
             {
                 Asset = new() { Width = int.Parse(values[3]), Height = int.Parse(values[4]) },

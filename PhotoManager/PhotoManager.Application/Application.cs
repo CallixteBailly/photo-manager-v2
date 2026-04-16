@@ -1,4 +1,5 @@
-﻿using PhotoManager.Domain;
+﻿using PhotoManager.Common;
+using PhotoManager.Domain;
 using PhotoManager.Domain.Interfaces;
 using System.Reflection;
 
@@ -80,10 +81,10 @@ public class Application(
         userConfigurationService.GetAboutInformation(assembly);
 
     // ImageProcessingService
-    public ImageInfo LoadImageFromPath(string imagePath, Enums.ImageRotation rotation) =>
+    public ImageInfo LoadImageFromPath(string imagePath, ImageRotation rotation) =>
         imageProcessingService.LoadImageFromPath(imagePath, rotation);
 
-    public ImageInfo LoadHeicImageFromPath(string imagePath, Enums.ImageRotation rotation) =>
+    public ImageInfo LoadHeicImageFromPath(string imagePath, ImageRotation rotation) =>
         imageProcessingService.LoadHeicImageFromPath(imagePath, rotation);
 
     // FileOperationsService

@@ -94,7 +94,7 @@ public class FindDuplicatedAssetsViewModelDHashTests
             ThumbnailCreationDateTime = actualDate,
             ImageRotation = Rotation.Rotate0,
             Hash = DHashes.HOMER_GIF,
-            ImageData = new(),
+            ImageData = [],
             Metadata = new()
             {
                 Corrupted = new() { IsTrue = false, Message = null },
@@ -120,7 +120,7 @@ public class FindDuplicatedAssetsViewModelDHashTests
             ThumbnailCreationDateTime = actualDate,
             ImageRotation = Rotation.Rotate0,
             Hash = DHashes.IMAGE_1_JPG,
-            ImageData = new(),
+            ImageData = [],
             Metadata = new()
             {
                 Corrupted = new() { IsTrue = false, Message = null },
@@ -154,7 +154,7 @@ public class FindDuplicatedAssetsViewModelDHashTests
             ThumbnailCreationDateTime = actualDate,
             ImageRotation = Rotation.Rotate180,
             Hash = DHashes.IMAGE_1_180_DEG_JPG,
-            ImageData = new(),
+            ImageData = [],
             Metadata = new()
             {
                 Corrupted = new() { IsTrue = false, Message = null },
@@ -188,7 +188,7 @@ public class FindDuplicatedAssetsViewModelDHashTests
             ThumbnailCreationDateTime = actualDate,
             ImageRotation = Rotation.Rotate270,
             Hash = DHashes.IMAGE_1_270_DEG_JPG,
-            ImageData = new(),
+            ImageData = [],
             Metadata = new()
             {
                 Corrupted = new() { IsTrue = false, Message = null },
@@ -222,7 +222,7 @@ public class FindDuplicatedAssetsViewModelDHashTests
             ThumbnailCreationDateTime = actualDate,
             ImageRotation = Rotation.Rotate90,
             Hash = DHashes.IMAGE_1_90_DEG_JPG,
-            ImageData = new(),
+            ImageData = [],
             Metadata = new()
             {
                 Corrupted = new() { IsTrue = false, Message = null },
@@ -256,7 +256,7 @@ public class FindDuplicatedAssetsViewModelDHashTests
             ThumbnailCreationDateTime = actualDate,
             ImageRotation = Rotation.Rotate0,
             Hash = DHashes.IMAGE_2_DUPLICATED_JPG,
-            ImageData = new(),
+            ImageData = [],
             Metadata = new()
             {
                 Corrupted = new() { IsTrue = false, Message = null },
@@ -282,7 +282,7 @@ public class FindDuplicatedAssetsViewModelDHashTests
             ThumbnailCreationDateTime = actualDate,
             ImageRotation = Rotation.Rotate0,
             Hash = DHashes.IMAGE_2_JPG,
-            ImageData = new(),
+            ImageData = [],
             Metadata = new()
             {
                 Corrupted = new() { IsTrue = false, Message = null },
@@ -308,7 +308,7 @@ public class FindDuplicatedAssetsViewModelDHashTests
             ThumbnailCreationDateTime = actualDate,
             ImageRotation = Rotation.Rotate0,
             Hash = DHashes.IMAGE_3_JPG,
-            ImageData = new(),
+            ImageData = [],
             Metadata = new()
             {
                 Corrupted = new() { IsTrue = false, Message = null },
@@ -334,7 +334,7 @@ public class FindDuplicatedAssetsViewModelDHashTests
             ThumbnailCreationDateTime = actualDate,
             ImageRotation = Rotation.Rotate0,
             Hash = DHashes.IMAGE_4_JPG,
-            ImageData = new(),
+            ImageData = [],
             Metadata = new()
             {
                 Corrupted = new() { IsTrue = false, Message = null },
@@ -360,7 +360,7 @@ public class FindDuplicatedAssetsViewModelDHashTests
             ThumbnailCreationDateTime = actualDate,
             ImageRotation = Rotation.Rotate0,
             Hash = DHashes.IMAGE_5_JPG,
-            ImageData = new(),
+            ImageData = [],
             Metadata = new()
             {
                 Corrupted = new() { IsTrue = false, Message = null },
@@ -386,7 +386,7 @@ public class FindDuplicatedAssetsViewModelDHashTests
             ThumbnailCreationDateTime = actualDate,
             ImageRotation = Rotation.Rotate0,
             Hash = DHashes.IMAGE_6_JPG,
-            ImageData = new(),
+            ImageData = [],
             Metadata = new()
             {
                 Corrupted = new() { IsTrue = false, Message = null },
@@ -412,7 +412,7 @@ public class FindDuplicatedAssetsViewModelDHashTests
             ThumbnailCreationDateTime = actualDate,
             ImageRotation = Rotation.Rotate0,
             Hash = DHashes.IMAGE_7_JPG,
-            ImageData = new(),
+            ImageData = [],
             Metadata = new()
             {
                 Corrupted = new() { IsTrue = false, Message = null },
@@ -442,7 +442,7 @@ public class FindDuplicatedAssetsViewModelDHashTests
             ThumbnailCreationDateTime = actualDate,
             ImageRotation = Rotation.Rotate0,
             Hash = DHashes.IMAGE_8_JPEG,
-            ImageData = new(),
+            ImageData = [],
             Metadata = new()
             {
                 Corrupted = new() { IsTrue = false, Message = null },
@@ -468,7 +468,7 @@ public class FindDuplicatedAssetsViewModelDHashTests
             ThumbnailCreationDateTime = actualDate,
             ImageRotation = Rotation.Rotate0,
             Hash = DHashes.IMAGE_9_PNG,
-            ImageData = new(),
+            ImageData = [],
             Metadata = new()
             {
                 Corrupted = new() { IsTrue = false, Message = null },
@@ -498,7 +498,7 @@ public class FindDuplicatedAssetsViewModelDHashTests
             ThumbnailCreationDateTime = actualDate,
             ImageRotation = Rotation.Rotate0,
             Hash = DHashes.IMAGE_11_HEIC,
-            ImageData = new(),
+            ImageData = [],
             Metadata = new()
             {
                 Corrupted = new() { IsTrue = false, Message = null },
@@ -532,7 +532,7 @@ public class FindDuplicatedAssetsViewModelDHashTests
             ThumbnailCreationDateTime = actualDate,
             ImageRotation = Rotation.Rotate270,
             Hash = DHashes.IMAGE_11_270_DEG_HEIC,
-            ImageData = new(),
+            ImageData = [],
             Metadata = new()
             {
                 Corrupted = new() { IsTrue = false, Message = null },
@@ -566,7 +566,7 @@ public class FindDuplicatedAssetsViewModelDHashTests
             ThumbnailCreationDateTime = actualDate,
             ImageRotation = Rotation.Rotate0,
             Hash = DHashes.IMAGE_WITH_UPPERCASE_NAME_JPG,
-            ImageData = new(),
+            ImageData = [],
             Metadata = new()
             {
                 Corrupted = new() { IsTrue = false, Message = null },

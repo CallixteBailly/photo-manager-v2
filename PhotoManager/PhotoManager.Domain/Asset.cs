@@ -1,4 +1,5 @@
-﻿namespace PhotoManager.Domain;
+﻿
+namespace PhotoManager.Domain;
 
 public class Asset
 {
@@ -8,7 +9,7 @@ public class Asset
     public string FullPath => Path.Combine(Folder.Path, FileName);
     public FileProperties FileProperties { get; set; } // Not stored in DB
     public required Pixel Pixel { get; init; }
-    public Enums.ImageRotation ImageRotation { get; init; }
+    public ImageRotation ImageRotation { get; init; }
     public required string Hash { get; init; }
     public byte[]? ImageData { get; set; } // Not stored in DB
     public DateTime ThumbnailCreationDateTime { get; init; }

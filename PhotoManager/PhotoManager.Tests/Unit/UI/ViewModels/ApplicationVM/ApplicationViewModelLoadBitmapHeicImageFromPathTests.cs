@@ -16,7 +16,7 @@ using ThumbnailWidthAsset = PhotoManager.Tests.Unit.Constants.ThumbnailWidthAsse
 namespace PhotoManager.Tests.Unit.UI.ViewModels.ApplicationVM;
 
 [TestFixture]
-public class ApplicationViewModelLoadBitmapHeicImageFromPathTests
+public class ApplicationViewModelLoadHeicImageFromPathTests
 {
     private string? _dataDirectory;
     private string? _databaseDirectory;
@@ -86,7 +86,7 @@ public class ApplicationViewModelLoadBitmapHeicImageFromPathTests
     [TestCase(Rotation.Rotate180, PixelWidthAsset.IMAGE_11_HEIC, PixelHeightAsset.IMAGE_11_HEIC)]
     [TestCase(Rotation.Rotate270, PixelWidthAsset.IMAGE_11_HEIC, PixelHeightAsset.IMAGE_11_HEIC)]
     // [TestCase(null, PixelWidthAsset.IMAGE_11_HEIC, PixelHeightAsset.IMAGE_11_HEIC)]
-    public void LoadBitmapHeicImageFromPath_ValidPathAndRotationAndNotRotatedImage_ReturnsBitmapImage(Rotation rotation,
+    public void LoadHeicImageFromPath_ValidPathAndRotationAndNotRotatedImage_ReturnsBitmapImage(Rotation rotation,
         int expectedWidth, int expectedHeight)
     {
         ConfigureApplicationViewModel(100, _dataDirectory!, 200, 150, false, false, false, false);
@@ -150,17 +150,15 @@ public class ApplicationViewModelLoadBitmapHeicImageFromPathTests
 
             _applicationViewModel!.NotifyCatalogChange(catalogChangeCallbackEventArgs);
 
-            BitmapImage image = _applicationViewModel!.LoadBitmapHeicImageFromPath();
+            ImageInfo image = _applicationViewModel!.LoadHeicImageFromPath();
 
             Assert.That(image, Is.Not.Null);
-            Assert.That(image.StreamSource, Is.Not.Null);
+            Assert.That(image.Data, Is.Not.Null);
             Assert.That(image.Rotation, Is.EqualTo(rotation));
             Assert.That(image.Width, Is.EqualTo(expectedWidth));
             Assert.That(image.Height, Is.EqualTo(expectedHeight));
-            Assert.That(image.PixelWidth, Is.EqualTo(expectedWidth));
-            Assert.That(image.PixelHeight, Is.EqualTo(expectedHeight));
-            Assert.That(image.DecodePixelWidth, Is.Zero);
-            Assert.That(image.DecodePixelHeight, Is.Zero);
+            Assert.That(image.Width, Is.EqualTo(expectedWidth));
+            Assert.That(image.Height, Is.EqualTo(expectedHeight));
 
             string expectedStatusMessage = $"Image {asset.FullPath} added to catalog.";
 
@@ -194,7 +192,7 @@ public class ApplicationViewModelLoadBitmapHeicImageFromPathTests
     [TestCase(FileNames.IMAGE_11_270_DEG_HEIC, Rotation.Rotate270, PixelWidthAsset.IMAGE_11_270_DEG_HEIC,
         PixelHeightAsset.IMAGE_11_270_DEG_HEIC, ThumbnailWidthAsset.IMAGE_11_270_DEG_HEIC,
         ThumbnailHeightAsset.IMAGE_11_270_DEG_HEIC, FileSize.IMAGE_11_270_DEG_HEIC, Hashes.IMAGE_11_270_DEG_HEIC)]
-    public void LoadBitmapHeicImageFromPath_ValidPathAndRotationAndRotatedImage_ReturnsBitmapImage(
+    public void LoadHeicImageFromPath_ValidPathAndRotationAndRotatedImage_ReturnsBitmapImage(
         string fileName,
         Rotation rotation,
         int expectedWidth,
@@ -260,17 +258,15 @@ public class ApplicationViewModelLoadBitmapHeicImageFromPathTests
 
             _applicationViewModel!.NotifyCatalogChange(catalogChangeCallbackEventArgs);
 
-            BitmapImage image = _applicationViewModel!.LoadBitmapHeicImageFromPath();
+            ImageInfo image = _applicationViewModel!.LoadHeicImageFromPath();
 
             Assert.That(image, Is.Not.Null);
-            Assert.That(image.StreamSource, Is.Not.Null);
+            Assert.That(image.Data, Is.Not.Null);
             Assert.That(image.Rotation, Is.EqualTo(rotation));
             Assert.That(image.Width, Is.EqualTo(expectedWidth));
             Assert.That(image.Height, Is.EqualTo(expectedHeight));
-            Assert.That(image.PixelWidth, Is.EqualTo(expectedWidth));
-            Assert.That(image.PixelHeight, Is.EqualTo(expectedHeight));
-            Assert.That(image.DecodePixelWidth, Is.Zero);
-            Assert.That(image.DecodePixelHeight, Is.Zero);
+            Assert.That(image.Width, Is.EqualTo(expectedWidth));
+            Assert.That(image.Height, Is.EqualTo(expectedHeight));
 
             string expectedStatusMessage = $"Image {asset.FullPath} added to catalog.";
 
@@ -295,7 +291,7 @@ public class ApplicationViewModelLoadBitmapHeicImageFromPathTests
     }
 
     [Test]
-    public void LoadBitmapHeicImageFromPath_ImageDoesNotExist_ReturnsDefaultBitmapImage()
+    public void LoadHeicImageFromPath_ImageDoesNotExist_ReturnsDefaultBitmapImage()
     {
         ConfigureApplicationViewModel(100, _dataDirectory!, 200, 150, false, false, false, false);
 
@@ -363,13 +359,11 @@ public class ApplicationViewModelLoadBitmapHeicImageFromPathTests
 
             _applicationViewModel!.NotifyCatalogChange(catalogChangeCallbackEventArgs);
 
-            BitmapImage image = _applicationViewModel!.LoadBitmapHeicImageFromPath();
+            ImageInfo image = _applicationViewModel!.LoadHeicImageFromPath();
 
             Assert.That(image, Is.Not.Null);
-            Assert.That(image.StreamSource, Is.Null);
+            Assert.That(image.Data, Is.Not.Null);
             Assert.That(image.Rotation, Is.EqualTo(Rotation.Rotate0));
-            Assert.That(image.DecodePixelWidth, Is.Zero);
-            Assert.That(image.DecodePixelHeight, Is.Zero);
 
             string expectedStatusMessage = $"Image {asset.FullPath} added to catalog.";
 
@@ -394,7 +388,7 @@ public class ApplicationViewModelLoadBitmapHeicImageFromPathTests
     }
 
     [Test]
-    public void LoadBitmapHeicImageFromPath_InvalidRotation_ThrowsArgumentException()
+    public void LoadHeicImageFromPath_InvalidRotation_ThrowsArgumentException()
     {
         ConfigureApplicationViewModel(100, _dataDirectory!, 200, 150, false, false, false, false);
 
@@ -459,7 +453,7 @@ public class ApplicationViewModelLoadBitmapHeicImageFromPathTests
             _applicationViewModel!.NotifyCatalogChange(catalogChangeCallbackEventArgs);
 
             ArgumentException? exception =
-                Assert.Throws<ArgumentException>(() => _applicationViewModel!.LoadBitmapHeicImageFromPath());
+                Assert.Throws<ArgumentException>(() => _applicationViewModel!.LoadHeicImageFromPath());
 
             Assert.That(exception?.Message, Is.EqualTo($"'{rotation}' is not a valid value for property 'Rotation'."));
 

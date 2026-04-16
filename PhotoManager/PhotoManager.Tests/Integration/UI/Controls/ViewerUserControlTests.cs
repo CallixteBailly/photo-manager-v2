@@ -1,4 +1,3 @@
-using PhotoManager.Domain.Enums;
 using PhotoManager.UI.Models;
 using PhotoManager.UI.ViewModels.Enums;
 using System.Collections.ObjectModel;
@@ -473,10 +472,10 @@ public class ViewerUserControlTests
             ImageInfo? imageInfo = ShowImage();
 
             Assert.That(imageInfo, Is.Not.Null);
-            Assert.That(imageInfo.Value.Data, Is.Not.Null);
-            Assert.That(imageInfo.Value.Rotation, Is.EqualTo(_asset1.ImageRotation));
-            Assert.That(imageInfo.Value.Width, Is.EqualTo(_asset1.Pixel.Asset.Width));
-            Assert.That(imageInfo.Value.Height, Is.EqualTo(_asset1.Pixel.Asset.Height));
+            Assert.That(imageInfo.Data, Is.Not.Null);
+            Assert.That(imageInfo.Rotation, Is.EqualTo(_asset1.ImageRotation));
+            Assert.That(imageInfo.Width, Is.EqualTo(_asset1.Pixel.Asset.Width));
+            Assert.That(imageInfo.Height, Is.EqualTo(_asset1.Pixel.Asset.Height));
 
             CheckAfterChanges(
                 _applicationViewModel!,
@@ -520,10 +519,10 @@ public class ViewerUserControlTests
             imageInfo = ShowImage();
 
             Assert.That(imageInfo, Is.Not.Null);
-            Assert.That(imageInfo.Value.Data, Is.Not.Null);
-            Assert.That(imageInfo.Value.Rotation, Is.EqualTo(_asset4.ImageRotation));
-            Assert.That(imageInfo.Value.Width, Is.EqualTo(_asset4.Pixel.Asset.Width));
-            Assert.That(imageInfo.Value.Height, Is.EqualTo(_asset4.Pixel.Asset.Height));
+            Assert.That(imageInfo.Data, Is.Not.Null);
+            Assert.That(imageInfo.Rotation, Is.EqualTo(_asset4.ImageRotation));
+            Assert.That(imageInfo.Width, Is.EqualTo(_asset4.Pixel.Asset.Width));
+            Assert.That(imageInfo.Height, Is.EqualTo(_asset4.Pixel.Asset.Height));
 
             CheckAfterChanges(
                 _applicationViewModel!,
@@ -623,10 +622,10 @@ public class ViewerUserControlTests
             ImageInfo? imageInfo = ShowImage();
 
             Assert.That(imageInfo, Is.Not.Null);
-            Assert.That(imageInfo.Value.Data, Is.Not.Null);
-            Assert.That(imageInfo.Value.Rotation, Is.EqualTo(_asset1.ImageRotation));
-            Assert.That(imageInfo.Value.Width, Is.EqualTo(_asset1.Pixel.Asset.Width));
-            Assert.That(imageInfo.Value.Height, Is.EqualTo(_asset1.Pixel.Asset.Height));
+            Assert.That(imageInfo.Data, Is.Not.Null);
+            Assert.That(imageInfo.Rotation, Is.EqualTo(_asset1.ImageRotation));
+            Assert.That(imageInfo.Width, Is.EqualTo(_asset1.Pixel.Asset.Width));
+            Assert.That(imageInfo.Height, Is.EqualTo(_asset1.Pixel.Asset.Height));
 
             CheckAfterChanges(
                 _applicationViewModel!,

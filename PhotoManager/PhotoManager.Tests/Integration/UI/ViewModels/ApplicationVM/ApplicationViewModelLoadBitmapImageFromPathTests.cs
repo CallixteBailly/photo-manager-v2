@@ -1,4 +1,3 @@
-using PhotoManager.Domain.Enums;
 using PhotoManager.UI.Models;
 using PhotoManager.UI.ViewModels.Enums;
 using System.Collections.ObjectModel;
@@ -17,7 +16,7 @@ using ThumbnailWidthAsset = PhotoManager.Tests.Integration.Constants.ThumbnailWi
 namespace PhotoManager.Tests.Integration.UI.ViewModels.ApplicationVM;
 
 [TestFixture]
-public class ApplicationViewModelLoadBitmapImageFromPathTests
+public class ApplicationViewModelLoadImageFromPathTests
 {
     private string? _dataDirectory;
     private string? _databaseDirectory;
@@ -208,7 +207,7 @@ public class ApplicationViewModelLoadBitmapImageFromPathTests
     }
 
     [Test]
-    public async Task LoadBitmapImageFromPath_CataloguedAssets_ReturnsBitmapImage()
+    public async Task LoadImageFromPath_CataloguedAssets_ReturnsBitmapImage()
     {
         string assetsDirectory = Path.Combine(_dataDirectory!, Directories.DUPLICATES, Directories.NEW_FOLDER_2);
 
@@ -502,7 +501,7 @@ public class ApplicationViewModelLoadBitmapImageFromPathTests
     }
 
     [Test]
-    public void LoadBitmapImageFromPath_NoCataloguedAssets_ThrowsNullReferenceException()
+    public void LoadImageFromPath_NoCataloguedAssets_ThrowsNullReferenceException()
     {
         ConfigureApplicationViewModel(100, _dataDirectory!, 200, 150, false, false, false, false);
 

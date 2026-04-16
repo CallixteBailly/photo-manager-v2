@@ -48,7 +48,7 @@ public class FindDuplicatedAssetsViewModelRefreshTests
                 Thumbnail = new() { Width = ThumbnailWidthAsset.IMAGE_1_JPG, Height = ThumbnailHeightAsset.IMAGE_1_JPG }
             },
             Hash = string.Empty, // Set in each tests
-            ImageData = new(),
+            ImageData = [],
             FileProperties = new()
             {
                 Size = 2020,
@@ -73,7 +73,7 @@ public class FindDuplicatedAssetsViewModelRefreshTests
                 Thumbnail = new() { Width = ThumbnailWidthAsset.IMAGE_2_JPG, Height = ThumbnailHeightAsset.IMAGE_2_JPG }
             },
             Hash = string.Empty, // Set in each tests
-            ImageData = new(),
+            ImageData = [],
             FileProperties = new()
             {
                 Size = 2048,
@@ -98,7 +98,7 @@ public class FindDuplicatedAssetsViewModelRefreshTests
                 Thumbnail = new() { Width = ThumbnailWidthAsset.IMAGE_3_JPG, Height = ThumbnailHeightAsset.IMAGE_3_JPG }
             },
             Hash = string.Empty, // Set in each tests
-            ImageData = new(),
+            ImageData = [],
             FileProperties = new()
             {
                 Size = 2000,
@@ -123,7 +123,7 @@ public class FindDuplicatedAssetsViewModelRefreshTests
                 Thumbnail = new() { Width = ThumbnailWidthAsset.IMAGE_4_JPG, Height = ThumbnailHeightAsset.IMAGE_4_JPG }
             },
             Hash = string.Empty, // Set in each tests
-            ImageData = new(),
+            ImageData = [],
             FileProperties = new()
             {
                 Size = 2030,
@@ -148,7 +148,7 @@ public class FindDuplicatedAssetsViewModelRefreshTests
                 Thumbnail = new() { Width = ThumbnailWidthAsset.IMAGE_5_JPG, Height = ThumbnailHeightAsset.IMAGE_5_JPG }
             },
             Hash = string.Empty, // Set in each tests
-            ImageData = new(),
+            ImageData = [],
             FileProperties = new()
             {
                 Size = 2048,

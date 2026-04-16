@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using PhotoManager.Domain.Interfaces;
 using PhotoManager.Infrastructure.Services;
 using System.Runtime.InteropServices;
 
@@ -33,25 +32,27 @@ public static class InfrastructureServiceCollectionExtensions
             services.AddSingleton<IDatabase, Database.Database>();
         }
 
-        private static void RegisterOsServices(IServiceCollection services)
+#pragma warning disable IDE0051
+        private static void RegisterOsServices(IServiceCollection serviceCollection)
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                services.AddSingleton<IFileExplorerService, WindowsFileExplorerService>();
-                services.AddSingleton<INotificationService, WindowsNotificationService>();
+                serviceCollection.AddSingleton<IFileExplorerService, WindowsFileExplorerService>();
+                serviceCollection.AddSingleton<INotificationService, NotificationService>();
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                services.AddSingleton<IFileExplorerService, LinuxFileExplorerService>();
-                services.AddSingleton<INotificationService, LinuxNotificationService>();
+                serviceCollection.AddSingleton<IFileExplorerService, LinuxFileExplorerService>();
+                serviceCollection.AddSingleton<INotificationService, LinuxNotificationService>();
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                services.AddSingleton<IFileExplorerService, MacOSFileExplorerService>();
-                services.AddSingleton<INotificationService, MacOSNotificationService>();
+                serviceCollection.AddSingleton<IFileExplorerService, MacOSFileExplorerService>();
+                serviceCollection.AddSingleton<INotificationService, MacOSNotificationService>();
             }
 
-            services.AddSingleton<IDialogService, AvaloniaDialogService>();
+            serviceCollection.AddSingleton<IDialogService, DialogService>();
         }
+#pragma warning restore IDE0051
     }
 }

@@ -1,5 +1,5 @@
+#pragma warning disable IDE0055
 using System.Diagnostics;
-using PhotoManager.Domain.Interfaces;
 
 namespace PhotoManager.Infrastructure.Services;
 
@@ -9,8 +9,8 @@ public class LinuxNotificationService : INotificationService
     {
         try
         {
-            Process.Start(new ProcessStartInfo("notify-send",
-                $""{title}" "{message}"") { UseShellExecute = true });
+            Process.Start(new ProcessStartInfo("notify-send", title + " " + message)
+                { UseShellExecute = true });
         }
         catch
         {

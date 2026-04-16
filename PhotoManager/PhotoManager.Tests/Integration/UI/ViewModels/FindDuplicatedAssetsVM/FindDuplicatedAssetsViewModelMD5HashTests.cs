@@ -72,7 +72,7 @@ public class FindDuplicatedAssetsViewModelMD5HashTests
             ThumbnailCreationDateTime = actualDate,
             ImageRotation = Rotation.Rotate0,
             Hash = MD5Hashes.IMAGE_1_JPG,
-            ImageData = new(),
+            ImageData = [],
             Metadata = new()
             {
                 Corrupted = new() { IsTrue = false, Message = null },
@@ -106,7 +106,7 @@ public class FindDuplicatedAssetsViewModelMD5HashTests
             ThumbnailCreationDateTime = actualDate,
             ImageRotation = Rotation.Rotate0,
             Hash = MD5Hashes.IMAGE_2_DUPLICATED_JPG,
-            ImageData = new(),
+            ImageData = [],
             Metadata = new()
             {
                 Corrupted = new() { IsTrue = false, Message = null },
@@ -132,7 +132,7 @@ public class FindDuplicatedAssetsViewModelMD5HashTests
             ThumbnailCreationDateTime = actualDate,
             ImageRotation = Rotation.Rotate0,
             Hash = MD5Hashes.IMAGE_2_JPG,
-            ImageData = new(),
+            ImageData = [],
             Metadata = new()
             {
                 Corrupted = new() { IsTrue = false, Message = null },
@@ -158,7 +158,7 @@ public class FindDuplicatedAssetsViewModelMD5HashTests
             ThumbnailCreationDateTime = actualDate,
             ImageRotation = Rotation.Rotate0,
             Hash = MD5Hashes.IMAGE_9_PNG,
-            ImageData = new(),
+            ImageData = [],
             Metadata = new()
             {
                 Corrupted = new() { IsTrue = false, Message = null },
@@ -188,7 +188,7 @@ public class FindDuplicatedAssetsViewModelMD5HashTests
             ThumbnailCreationDateTime = actualDate,
             ImageRotation = Rotation.Rotate0,
             Hash = MD5Hashes.IMAGE_11_HEIC,
-            ImageData = new(),
+            ImageData = [],
             Metadata = new()
             {
                 Corrupted = new() { IsTrue = false, Message = null },

@@ -304,6 +304,7 @@
   </Target>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="rmdir /S /Q $(OutDir)TestFiles\ApplicationData\" />
+    <Exec Command="rm -rf &quot;$(OutDir)TestFiles/ApplicationData/&quot;" Condition=" '$(OS)' != 'Windows_NT' " />
+    <Exec Command="rmdir /S /Q &quot;$(OutDir)TestFiles\ApplicationData\&quot;" Condition=" '$(OS)' == 'Windows_NT' " />
   </Target>
 </Project>

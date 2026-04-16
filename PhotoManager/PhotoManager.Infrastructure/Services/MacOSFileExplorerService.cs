@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using PhotoManager.Domain.Interfaces;
 
 namespace PhotoManager.Infrastructure.Services;
 
@@ -16,6 +15,6 @@ public class MacOSFileExplorerService : IFileExplorerService
 
     public void SelectFileInExplorer(string filePath)
     {
-        Process.Start(new ProcessStartInfo("open", $"-R "{filePath}"") { UseShellExecute = true });
+        Process.Start(new ProcessStartInfo("open", $"-R \"{filePath}\"") { UseShellExecute = true });
     }
 }
