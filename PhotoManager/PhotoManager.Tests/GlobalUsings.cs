@@ -1,4 +1,4 @@
-global using Microsoft.Extensions.Configuration;
+﻿global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.Logging.Testing;
 global using NSubstitute;
 global using NSubstitute.ExceptionExtensions;

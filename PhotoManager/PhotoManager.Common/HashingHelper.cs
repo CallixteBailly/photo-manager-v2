@@ -63,7 +63,8 @@ public static class HashingHelper
         using (MagickImage image = new(filePath!))
         {
             // Resize to 9x8 for DHash calculation
-            image.Resize(9, 8);
+            // Must force exact size (ignore aspect ratio) for pixel access to work correctly
+            image.Resize(new MagickGeometry(9, 8) { IgnoreAspectRatio = true });
 
             // Convert to grayscale
             image.Grayscale(PixelIntensityMethod.Average);
@@ -72,6 +73,7 @@ public static class HashingHelper
             ulong mask = 1UL;
 
             // Get pixel data as 2D array of grayscale values
+            // After resize, image is exactly 9x8 pixels
             using (IPixelCollection<ushort> pixels = image.GetPixels())
             {
                 for (int y = 0; y < 8; y++)

@@ -11,9 +11,12 @@ public static class BitmapHelper
         try
         {
             using MagickImage magickImage = new(buffer);
+            int originalWidth = (int)magickImage.Width;
+            int originalHeight = (int)magickImage.Height;
             MagickImageApplyRotation(magickImage, rotation);
             byte[] imageData = magickImage.ToByteArray(MagickFormat.Bmp);
-            return new ImageInfo(imageData, (int)magickImage.Width, (int)magickImage.Height, rotation);
+            (int width, int height) = GetRotatedDimensions(originalWidth, originalHeight, rotation);
+            return new ImageInfo(imageData, width, height, rotation);
         }
         catch (Exception ex) when (ex is not ArgumentException and not ArgumentNullException and not OverflowException)
         {
@@ -34,7 +37,8 @@ public static class BitmapHelper
             MagickImageApplyRotation(magickImage, rotation);
             magickImage.Resize((uint)width, (uint)height);
             byte[] imageData = magickImage.ToByteArray(MagickFormat.Bmp);
-            return new ImageInfo(imageData, width, height, rotation);
+            (int rotatedWidth, int rotatedHeight) = GetRotatedDimensions(width, height, rotation);
+            return new ImageInfo(imageData, rotatedWidth, rotatedHeight, rotation);
         }
         catch (Exception ex) when (ex is not ArgumentException and not ArgumentNullException and not OverflowException)
         {
@@ -51,9 +55,12 @@ public static class BitmapHelper
         try
         {
             using MagickImage magickImage = new(buffer);
+            int originalWidth = (int)magickImage.Width;
+            int originalHeight = (int)magickImage.Height;
             MagickImageApplyRotation(magickImage, rotation);
             byte[] imageData = magickImage.ToByteArray(MagickFormat.Bmp);
-            return new ImageInfo(imageData, (int)magickImage.Width, (int)magickImage.Height, rotation);
+            (int width, int height) = GetRotatedDimensions(originalWidth, originalHeight, rotation);
+            return new ImageInfo(imageData, width, height, rotation);
         }
         catch (MagickException ex)
         {
@@ -72,7 +79,8 @@ public static class BitmapHelper
             MagickImageApplyRotation(magickImage, rotation);
             magickImage.Resize((uint)width, (uint)height);
             byte[] imageData = magickImage.ToByteArray(MagickFormat.Bmp);
-            return new ImageInfo(imageData, width, height, rotation);
+            (int rotatedWidth, int rotatedHeight) = GetRotatedDimensions(width, height, rotation);
+            return new ImageInfo(imageData, rotatedWidth, rotatedHeight, rotation);
         }
         catch (MagickException ex)
         {
@@ -90,9 +98,12 @@ public static class BitmapHelper
         }
 
         using MagickImage magickImage = new(imagePath);
+        int originalWidth = (int)magickImage.Width;
+        int originalHeight = (int)magickImage.Height;
         MagickImageApplyRotation(magickImage, rotation);
         byte[] imageData = magickImage.ToByteArray(MagickFormat.Bmp);
-        return new ImageInfo(imageData, (int)magickImage.Width, (int)magickImage.Height, rotation);
+        (int width, int height) = GetRotatedDimensions(originalWidth, originalHeight, rotation);
+        return new ImageInfo(imageData, width, height, rotation);
     }
 
     // From ShowImage() in ViewerUserControl to open the image in fullscreen mode for Heic
@@ -106,9 +117,12 @@ public static class BitmapHelper
         try
         {
             using MagickImage magickImage = new(imagePath);
+            int originalWidth = (int)magickImage.Width;
+            int originalHeight = (int)magickImage.Height;
             MagickImageApplyRotation(magickImage, rotation);
             byte[] imageData = magickImage.ToByteArray(MagickFormat.Jpg);
-            return new ImageInfo(imageData, (int)magickImage.Width, (int)magickImage.Height, rotation);
+            (int width, int height) = GetRotatedDimensions(originalWidth, originalHeight, rotation);
+            return new ImageInfo(imageData, width, height, rotation);
         }
         catch (MagickException ex)
         {
@@ -181,5 +195,15 @@ public static class BitmapHelper
         {
             magickImage.Rotate(rotationAngle);
         }
+    }
+
+    private static (int Width, int Height) GetRotatedDimensions(int width, int height, ImageRotation rotation)
+    {
+        return rotation switch
+        {
+            ImageRotation.Rotate90 => (height, width),
+            ImageRotation.Rotate270 => (height, width),
+            _ => (width, height)
+        };
     }
 }
