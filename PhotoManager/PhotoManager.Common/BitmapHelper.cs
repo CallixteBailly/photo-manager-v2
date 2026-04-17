@@ -63,6 +63,7 @@ public static class BitmapHelper
             MagickReadSettings settings = new() { SyncImageWithExifProfile = false };
             using MagickImage magickImage = new(buffer, settings);
             MagickImageApplyRotation(magickImage, rotation);
+            (width, height) = CalculateRotatedDimensions(magickImage.Width, magickImage.Height, width, height);
             magickImage.Resize((uint)width, (uint)height);
             byte[] imageData = magickImage.ToByteArray(MagickFormat.Bmp);
             return new ImageInfo(imageData, width, height, rotation);
@@ -90,10 +91,14 @@ public static class BitmapHelper
             (int width, int height) = GetRotatedDimensions(originalWidth, originalHeight, rotation);
             return new ImageInfo(imageData, width, height, rotation);
         }
-        catch (MagickException ex)
+        catch (ArgumentException)
+        {
+            throw;
+        }
+        catch (Exception ex)
         {
             logger.LogError(ex, "The image is not valid or in an unsupported format");
-            throw;
+            return new ImageInfo(null, 0, 0, ImageRotation.Rotate0);
         }
     }
 
@@ -106,14 +111,19 @@ public static class BitmapHelper
             MagickReadSettings settings = new() { SyncImageWithExifProfile = false };
             using MagickImage magickImage = new(buffer, settings);
             MagickImageApplyRotation(magickImage, rotation);
+            (width, height) = CalculateRotatedDimensions(magickImage.Width, magickImage.Height, width, height);
             magickImage.Resize((uint)width, (uint)height);
             byte[] imageData = magickImage.ToByteArray(MagickFormat.Bmp);
             return new ImageInfo(imageData, width, height, rotation);
         }
-        catch (MagickException ex)
+        catch (ArgumentException)
+        {
+            throw;
+        }
+        catch (Exception ex)
         {
             logger.LogError(ex, "The image is not valid or in an unsupported format");
-            throw;
+            return new ImageInfo(null, 0, 0, ImageRotation.Rotate0);
         }
     }
 
@@ -209,8 +219,35 @@ public static class BitmapHelper
 
     private static byte[] GetImageBytes(ImageInfo imageInfo, MagickFormat format)
     {
-        using MagickImage magickImage = new(imageInfo.Data);
+        using MagickImage magickImage = new(imageInfo.Data!);
         return magickImage.ToByteArray(format);
+    }
+
+    /// <summary>
+    /// Mimics WPF DecodePixelWidth/DecodePixelHeight behavior:
+    /// when one dimension is negative or 0, it is calculated from the other preserving aspect ratio.
+    /// When both are negative or 0, original dimensions are used.
+    /// Uses the already-rotated image dimensions (after MagickImageApplyRotation).
+    /// </summary>
+    private static (int width, int height) CalculateRotatedDimensions(uint imageWidth, uint imageHeight, int width, int height)
+    {
+        if (width <= 0 && height <= 0)
+        {
+            return ((int)imageWidth, (int)imageHeight);
+        }
+
+        if (width <= 0)
+        {
+            float percentage = height * 100f / imageHeight;
+            width = Convert.ToInt32(percentage * imageWidth / 100);
+        }
+        else if (height <= 0)
+        {
+            float percentage = width * 100f / imageWidth;
+            height = Convert.ToInt32(percentage * imageHeight / 100);
+        }
+
+        return (width, height);
     }
 
     private static void MagickImageApplyRotation(MagickImage magickImage, ImageRotation rotation)

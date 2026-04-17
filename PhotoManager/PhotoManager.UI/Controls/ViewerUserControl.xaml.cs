@@ -94,7 +94,7 @@ public partial class ViewerUserControl
 
             BitmapImage bitmapImage = new();
             bitmapImage.BeginInit();
-            bitmapImage.StreamSource = new MemoryStream(imageInfo.Data);
+            bitmapImage.StreamSource = new MemoryStream(imageInfo.Data!);
             bitmapImage.Rotation = imageInfo.Rotation.ToRotation();
             bitmapImage.EndInit();
 
