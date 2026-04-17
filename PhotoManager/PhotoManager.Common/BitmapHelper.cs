@@ -96,7 +96,6 @@ public static class BitmapHelper
     }
 
     // From CatalogAssetsService for CreateAsset() to get the originalImage for HEIC
-    // HEIC files are auto-oriented by Magick.NET, so no manual rotation needed
     public static ImageInfo LoadHeicOriginalImage(byte[] buffer, ImageRotation rotation, ILogger logger)
     {
         ArgumentNullException.ThrowIfNull(buffer);
@@ -108,10 +107,13 @@ public static class BitmapHelper
 
         try
         {
-            using MagickImage magickImage = new(buffer);
-            int width = (int)magickImage.Width;
-            int height = (int)magickImage.Height;
+            MagickReadSettings settings = new() { SyncImageWithExifProfile = false };
+            using MagickImage magickImage = new(buffer, settings);
+            int originalWidth = (int)magickImage.Width;
+            int originalHeight = (int)magickImage.Height;
+            MagickImageApplyRotation(magickImage, rotation);
             byte[] imageData = magickImage.ToByteArray(MagickFormat.Bmp);
+            (int width, int height) = GetRotatedDimensions(originalWidth, originalHeight, rotation);
             return new ImageInfo(imageData, width, height, rotation);
         }
         catch (ArgumentException)
@@ -126,7 +128,6 @@ public static class BitmapHelper
     }
 
     // From CatalogAssetsService for CreateAsset() to get the thumbnailImage for HEIC
-    // HEIC files are auto-oriented by Magick.NET, so no manual rotation needed
     public static ImageInfo LoadHeicThumbnailImage(byte[] buffer, ImageRotation rotation, int width, int height,
         ILogger logger)
     {
@@ -145,8 +146,10 @@ public static class BitmapHelper
 
         try
         {
-            using MagickImage magickImage = new(buffer);
-            (width, height) = CalculateDimensions(magickImage.Width, magickImage.Height, width, height);
+            MagickReadSettings settings = new() { SyncImageWithExifProfile = false };
+            using MagickImage magickImage = new(buffer, settings);
+            MagickImageApplyRotation(magickImage, rotation);
+            (width, height) = CalculateRotatedDimensions(magickImage.Width, magickImage.Height, width, height);
             magickImage.Resize((uint)width, (uint)height);
             byte[] imageData = magickImage.ToByteArray(MagickFormat.Bmp);
             return new ImageInfo(imageData, (int)magickImage.Width, (int)magickImage.Height, rotation);
