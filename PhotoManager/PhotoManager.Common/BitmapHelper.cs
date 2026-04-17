@@ -36,7 +36,8 @@ public static class BitmapHelper
     {
         try
         {
-            using MagickImage magickImage = new(buffer);
+            MagickReadSettings settings = new() { SyncImageWithExifProfile = false };
+            using MagickImage magickImage = new(buffer, settings);
             int originalWidth = (int)magickImage.Width;
             int originalHeight = (int)magickImage.Height;
             MagickImageApplyRotation(magickImage, rotation);
@@ -59,7 +60,8 @@ public static class BitmapHelper
     {
         try
         {
-            using MagickImage magickImage = new(buffer);
+            MagickReadSettings settings = new() { SyncImageWithExifProfile = false };
+            using MagickImage magickImage = new(buffer, settings);
             MagickImageApplyRotation(magickImage, rotation);
             magickImage.Resize((uint)width, (uint)height);
             byte[] imageData = magickImage.ToByteArray(MagickFormat.Bmp);
@@ -79,7 +81,8 @@ public static class BitmapHelper
     {
         try
         {
-            using MagickImage magickImage = new(buffer);
+            MagickReadSettings settings = new() { SyncImageWithExifProfile = false };
+            using MagickImage magickImage = new(buffer, settings);
             int originalWidth = (int)magickImage.Width;
             int originalHeight = (int)magickImage.Height;
             MagickImageApplyRotation(magickImage, rotation);
@@ -100,7 +103,8 @@ public static class BitmapHelper
     {
         try
         {
-            using MagickImage magickImage = new(buffer);
+            MagickReadSettings settings = new() { SyncImageWithExifProfile = false };
+            using MagickImage magickImage = new(buffer, settings);
             MagickImageApplyRotation(magickImage, rotation);
             magickImage.Resize((uint)width, (uint)height);
             byte[] imageData = magickImage.ToByteArray(MagickFormat.Bmp);
@@ -121,7 +125,8 @@ public static class BitmapHelper
             return new ImageInfo([], 0, 0, rotation);
         }
 
-        using MagickImage magickImage = new(imagePath);
+        MagickReadSettings settings = new() { SyncImageWithExifProfile = false };
+        using MagickImage magickImage = new(imagePath, settings);
         int originalWidth = (int)magickImage.Width;
         int originalHeight = (int)magickImage.Height;
         MagickImageApplyRotation(magickImage, rotation);
@@ -140,7 +145,8 @@ public static class BitmapHelper
 
         try
         {
-            using MagickImage magickImage = new(imagePath);
+            MagickReadSettings settings = new() { SyncImageWithExifProfile = false };
+            using MagickImage magickImage = new(imagePath, settings);
             int originalWidth = (int)magickImage.Width;
             int originalHeight = (int)magickImage.Height;
             MagickImageApplyRotation(magickImage, rotation);
@@ -160,7 +166,8 @@ public static class BitmapHelper
     {
         try
         {
-            using MagickImage magickImage = new(buffer);
+            MagickReadSettings settings = new() { SyncImageWithExifProfile = false };
+            using MagickImage magickImage = new(buffer, settings);
             (width, height) = CalculateDimensions(magickImage.Width, magickImage.Height, width, height);
             magickImage.Resize((uint)width, (uint)height);
             byte[] imageData = magickImage.ToByteArray(MagickFormat.Bmp);
@@ -180,7 +187,8 @@ public static class BitmapHelper
             return null;
         }
 
-        using MagickImage magickImage = new(imagePath);
+        MagickReadSettings settings = new() { SyncImageWithExifProfile = false };
+        using MagickImage magickImage = new(imagePath, settings);
         return magickImage.ToByteArray(MagickFormat.Jpg);
     }
 
@@ -209,10 +217,11 @@ public static class BitmapHelper
     {
         int rotationAngle = rotation switch
         {
+            ImageRotation.Rotate0 => 0,
             ImageRotation.Rotate90 => 90,
             ImageRotation.Rotate180 => 180,
             ImageRotation.Rotate270 => 270,
-            _ => 0
+            _ => throw new ArgumentException($"'{rotation}' is not a valid value for property 'Rotation'.")
         };
 
         if (rotationAngle != 0)
