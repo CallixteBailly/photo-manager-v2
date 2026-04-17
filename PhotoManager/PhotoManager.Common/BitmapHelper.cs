@@ -34,6 +34,13 @@ public static class BitmapHelper
 
     public static ImageInfo LoadOriginalImage(byte[] buffer, ImageRotation rotation, ILogger logger)
     {
+        ArgumentNullException.ThrowIfNull(buffer);
+
+        if (buffer.Length == 0)
+        {
+            throw new ArgumentException("Value cannot be empty. (Parameter 'stream')");
+        }
+
         try
         {
             MagickReadSettings settings = new() { SyncImageWithExifProfile = false };
@@ -58,6 +65,13 @@ public static class BitmapHelper
     public static ImageInfo LoadThumbnailImage(byte[] buffer, ImageRotation rotation, int width, int height,
         ILogger logger)
     {
+        ArgumentNullException.ThrowIfNull(buffer);
+
+        if (buffer.Length == 0)
+        {
+            throw new ArgumentException("Value cannot be empty. (Parameter 'stream')");
+        }
+
         try
         {
             MagickReadSettings settings = new() { SyncImageWithExifProfile = false };
@@ -80,6 +94,13 @@ public static class BitmapHelper
     // From CatalogAssetsService for CreateAsset() to get the originalImage for HEIC
     public static ImageInfo LoadHeicOriginalImage(byte[] buffer, ImageRotation rotation, ILogger logger)
     {
+        ArgumentNullException.ThrowIfNull(buffer);
+
+        if (buffer.Length == 0)
+        {
+            throw new ArgumentException("Value cannot be empty. (Parameter 'stream')");
+        }
+
         try
         {
             MagickReadSettings settings = new() { SyncImageWithExifProfile = false };
@@ -106,6 +127,13 @@ public static class BitmapHelper
     public static ImageInfo LoadHeicThumbnailImage(byte[] buffer, ImageRotation rotation, int width, int height,
         ILogger logger)
     {
+        ArgumentNullException.ThrowIfNull(buffer);
+
+        if (buffer.Length == 0)
+        {
+            throw new ArgumentException("Value cannot be empty. (Parameter 'stream')");
+        }
+
         try
         {
             MagickReadSettings settings = new() { SyncImageWithExifProfile = false };
@@ -174,6 +202,13 @@ public static class BitmapHelper
     // From AssetRepository
     public static ImageInfo LoadThumbnailImage(byte[] buffer, int width, int height, ILogger logger)
     {
+        ArgumentNullException.ThrowIfNull(buffer);
+
+        if (buffer.Length == 0)
+        {
+            throw new NotSupportedException("No imaging component suitable to complete this operation was found.");
+        }
+
         try
         {
             MagickReadSettings settings = new() { SyncImageWithExifProfile = false };
