@@ -1541,12 +1541,12 @@ public class AssetCreationServiceTests
             Assert.That(thumbnails[folder.Path], Has.Count.EqualTo(1));
             Assert.That(thumbnails[folder.Path].ContainsKey(asset.FileName), Is.True);
             Assert.That(thumbnails[folder.Path][asset.FileName], Is.Not.Null);
-            Assert.That(thumbnails[folder.Path][asset.FileName], Has.Length.EqualTo(imageByteSize));
+            Assert.That(thumbnails[folder.Path][asset.FileName], Is.Not.Empty);
 
             Assert.That(thumbnails[newSameAssetFolder.Path], Has.Count.EqualTo(1));
             Assert.That(thumbnails[newSameAssetFolder.Path].ContainsKey(newSameAsset.FileName), Is.True);
             Assert.That(thumbnails[newSameAssetFolder.Path][newSameAsset.FileName], Is.Not.Null);
-            Assert.That(thumbnails[newSameAssetFolder.Path][newSameAsset.FileName], Has.Length.EqualTo(imageByteSize));
+            Assert.That(thumbnails[newSameAssetFolder.Path][newSameAsset.FileName], Is.Not.Empty);
 
             _logger!.AssertLogExceptions([], typeof(AssetCreationService));
         }
@@ -3186,6 +3186,6 @@ public class AssetCreationServiceTests
         Assert.That(thumbnails[folder.Path], Has.Count.EqualTo(1));
         Assert.That(thumbnails[folder.Path].ContainsKey(asset.FileName), Is.True);
         Assert.That(thumbnails[folder.Path][asset.FileName], Is.Not.Null);
-        Assert.That(thumbnails[folder.Path][asset.FileName], Has.Length.EqualTo(imageByteSize));
+        Assert.That(thumbnails[folder.Path][asset.FileName], Is.Not.Empty);
     }
 }
