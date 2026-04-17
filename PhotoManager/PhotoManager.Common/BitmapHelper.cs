@@ -37,8 +37,7 @@ public static class BitmapHelper
             MagickImageApplyRotation(magickImage, rotation);
             magickImage.Resize((uint)width, (uint)height);
             byte[] imageData = magickImage.ToByteArray(MagickFormat.Bmp);
-            (int rotatedWidth, int rotatedHeight) = GetRotatedDimensions(width, height, rotation);
-            return new ImageInfo(imageData, rotatedWidth, rotatedHeight, rotation);
+            return new ImageInfo(imageData, width, height, rotation);
         }
         catch (Exception ex) when (ex is not ArgumentException and not ArgumentNullException and not OverflowException)
         {
@@ -79,8 +78,7 @@ public static class BitmapHelper
             MagickImageApplyRotation(magickImage, rotation);
             magickImage.Resize((uint)width, (uint)height);
             byte[] imageData = magickImage.ToByteArray(MagickFormat.Bmp);
-            (int rotatedWidth, int rotatedHeight) = GetRotatedDimensions(width, height, rotation);
-            return new ImageInfo(imageData, rotatedWidth, rotatedHeight, rotation);
+            return new ImageInfo(imageData, width, height, rotation);
         }
         catch (MagickException ex)
         {
@@ -177,7 +175,6 @@ public static class BitmapHelper
     private static byte[] GetImageBytes(ImageInfo imageInfo, MagickFormat format)
     {
         using MagickImage magickImage = new(imageInfo.Data);
-        MagickImageApplyRotation(magickImage, imageInfo.Rotation);
         return magickImage.ToByteArray(format);
     }
 
