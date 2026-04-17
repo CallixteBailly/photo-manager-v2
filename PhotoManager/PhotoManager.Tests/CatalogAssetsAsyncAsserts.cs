@@ -342,6 +342,7 @@ public static class CatalogAssetsAsyncAsserts
         Dictionary<string, Dictionary<string, byte[]>> thumbnails,
         IReadOnlyList<int> assetsImageByteSize)
     {
+        _ = assetsImageByteSize;
         Assert.That(thumbnails, Has.Count.EqualTo(folders.Count));
 
         int thumbnailsTotalCount = 0;

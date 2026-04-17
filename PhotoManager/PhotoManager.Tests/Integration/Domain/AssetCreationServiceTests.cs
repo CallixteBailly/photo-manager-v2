@@ -1448,8 +1448,6 @@ public class AssetCreationServiceTests
             }
         };
 
-        const int imageByteSize = ImageByteSizes.IMAGE_1_JPG;
-
         try
         {
             Folder folder = _testableAssetRepository!.AddFolder(_dataDirectory!); // Set above, not in this method
@@ -1561,6 +1559,8 @@ public class AssetCreationServiceTests
     {
         ConfigureAssetCreationService(200, 150, false, false, false, false);
 
+        const int imageByteSize = ImageByteSizes.IMAGE_1_JPG;
+
         Asset expectedAsset = new()
         {
             FolderId = Guid.Empty, // Initialised later
@@ -1586,8 +1586,6 @@ public class AssetCreationServiceTests
                 Rotated = new() { IsTrue = false, Message = null }
             }
         };
-
-        const int imageByteSize = ImageByteSizes.IMAGE_1_JPG;
 
         try
         {
@@ -3171,6 +3169,7 @@ public class AssetCreationServiceTests
     private void AssertCataloguedAssetAndThumbnailValidity(Asset asset, Folder folder,
         Dictionary<string, Dictionary<string, byte[]>> thumbnails, int imageByteSize)
     {
+        _ = imageByteSize;
         List<Asset> assetsFromRepository = _testableAssetRepository!.GetCataloguedAssets();
         Assert.That(assetsFromRepository, Has.Count.EqualTo(1));
 
