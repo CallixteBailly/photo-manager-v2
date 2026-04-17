@@ -10,20 +10,24 @@ public static class BitmapHelper
     /// Mimics WPF DecodePixelWidth/DecodePixelHeight behavior:
     /// when one dimension is 0, it is calculated from the other preserving aspect ratio.
     /// When both are 0, original dimensions are used.
+    /// Negative values are treated as their absolute value.
     /// </summary>
     private static (int width, int height) CalculateDimensions(uint imageWidth, uint imageHeight, int width, int height)
     {
-        if (width <= 0 && height <= 0)
+        width = Math.Abs(width);
+        height = Math.Abs(height);
+
+        if (width == 0 && height == 0)
         {
             return ((int)imageWidth, (int)imageHeight);
         }
 
-        if (width <= 0)
+        if (width == 0)
         {
             float percentage = height * 100f / imageHeight;
             width = Convert.ToInt32(percentage * imageWidth / 100);
         }
-        else if (height <= 0)
+        else if (height == 0)
         {
             float percentage = width * 100f / imageWidth;
             height = Convert.ToInt32(percentage * imageHeight / 100);
@@ -160,16 +164,13 @@ public static class BitmapHelper
     {
         if (!File.Exists(imagePath))
         {
-            return new ImageInfo([], 0, 0, rotation);
+            return new ImageInfo(null, 0, 0, rotation);
         }
 
-        MagickReadSettings settings = new() { SyncImageWithExifProfile = false };
-        using MagickImage magickImage = new(imagePath, settings);
-        int originalWidth = (int)magickImage.Width;
-        int originalHeight = (int)magickImage.Height;
-        MagickImageApplyRotation(magickImage, rotation);
+        using MagickImage magickImage = new(imagePath);
+        int width = (int)magickImage.Width;
+        int height = (int)magickImage.Height;
         byte[] imageData = magickImage.ToByteArray(MagickFormat.Bmp);
-        (int width, int height) = GetRotatedDimensions(originalWidth, originalHeight, rotation);
         return new ImageInfo(imageData, width, height, rotation);
     }
 
@@ -178,24 +179,21 @@ public static class BitmapHelper
     {
         if (!File.Exists(imagePath))
         {
-            return new ImageInfo([], 0, 0, rotation);
+            return new ImageInfo(null, 0, 0, rotation);
         }
 
         try
         {
-            MagickReadSettings settings = new() { SyncImageWithExifProfile = false };
-            using MagickImage magickImage = new(imagePath, settings);
-            int originalWidth = (int)magickImage.Width;
-            int originalHeight = (int)magickImage.Height;
-            MagickImageApplyRotation(magickImage, rotation);
+            using MagickImage magickImage = new(imagePath);
+            int width = (int)magickImage.Width;
+            int height = (int)magickImage.Height;
             byte[] imageData = magickImage.ToByteArray(MagickFormat.Jpg);
-            (int width, int height) = GetRotatedDimensions(originalWidth, originalHeight, rotation);
             return new ImageInfo(imageData, width, height, rotation);
         }
         catch (MagickException ex)
         {
             logger.LogError(ex, "Failed to load HEIC image from path: {imagePath}.", imagePath);
-            return new ImageInfo([], 0, 0, rotation);
+            return new ImageInfo(null, 0, 0, rotation);
         }
     }
 
@@ -232,8 +230,7 @@ public static class BitmapHelper
             return null;
         }
 
-        MagickReadSettings settings = new() { SyncImageWithExifProfile = false };
-        using MagickImage magickImage = new(imagePath, settings);
+        using MagickImage magickImage = new(imagePath);
         return magickImage.ToByteArray(MagickFormat.Jpg);
     }
 
@@ -263,20 +260,24 @@ public static class BitmapHelper
     /// when one dimension is negative or 0, it is calculated from the other preserving aspect ratio.
     /// When both are negative or 0, original dimensions are used.
     /// Uses the already-rotated image dimensions (after MagickImageApplyRotation).
+    /// Negative values are treated as their absolute value.
     /// </summary>
     private static (int width, int height) CalculateRotatedDimensions(uint imageWidth, uint imageHeight, int width, int height)
     {
-        if (width <= 0 && height <= 0)
+        width = Math.Abs(width);
+        height = Math.Abs(height);
+
+        if (width == 0 && height == 0)
         {
             return ((int)imageWidth, (int)imageHeight);
         }
 
-        if (width <= 0)
+        if (width == 0)
         {
             float percentage = height * 100f / imageHeight;
             width = Convert.ToInt32(percentage * imageWidth / 100);
         }
-        else if (height <= 0)
+        else if (height == 0)
         {
             float percentage = width * 100f / imageWidth;
             height = Convert.ToInt32(percentage * imageHeight / 100);
