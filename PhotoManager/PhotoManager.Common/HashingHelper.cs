@@ -60,38 +60,50 @@ public static class HashingHelper
     // For GIF or some heic file it returns "00000000000000"
     public static string CalculateDHash(string? filePath)
     {
-        using (MagickImage image = new(filePath!))
+        if (filePath is null)
         {
-            // Resize to 9x8 for DHash calculation
-            // Must force exact size (ignore aspect ratio) for pixel access to work correctly
-            image.Resize(new MagickGeometry(9, 8) { IgnoreAspectRatio = true });
+            throw new ArgumentNullException("path");
+        }
 
-            // Convert to grayscale
-            image.Grayscale(PixelIntensityMethod.Average);
-
-            ulong hash = 0UL;
-            ulong mask = 1UL;
-
-            // Get pixel data as 2D array of grayscale values
-            // After resize, image is exactly 9x8 pixels
-            using (IPixelCollection<ushort> pixels = image.GetPixels())
+        try
+        {
+            using (MagickImage image = new(filePath))
             {
-                for (int y = 0; y < 8; y++)
+                // Resize to 9x8 for DHash calculation
+                // Must force exact size (ignore aspect ratio) for pixel access to work correctly
+                image.Resize(new MagickGeometry(9, 8) { IgnoreAspectRatio = true });
+
+                // Convert to grayscale
+                image.Grayscale(PixelIntensityMethod.Average);
+
+                ulong hash = 0UL;
+                ulong mask = 1UL;
+
+                // Get pixel data as 2D array of grayscale values
+                // After resize, image is exactly 9x8 pixels
+                using (IPixelCollection<ushort> pixels = image.GetPixels())
                 {
-                    for (int x = 0; x < 7; x++)
+                    for (int y = 0; y < 8; y++)
                     {
-                        ushort leftPixel = pixels.GetPixel(x, y)[0];
-                        ushort rightPixel = pixels.GetPixel(x + 1, y)[0];
-                        if (leftPixel < rightPixel)
+                        for (int x = 0; x < 7; x++)
                         {
-                            hash |= mask;
+                            ushort leftPixel = pixels.GetPixel(x, y)[0];
+                            ushort rightPixel = pixels.GetPixel(x + 1, y)[0];
+                            if (leftPixel < rightPixel)
+                            {
+                                hash |= mask;
+                            }
+                            mask <<= 1;
                         }
-                        mask <<= 1;
                     }
                 }
-            }
 
-            return hash.ToString("x14"); // Always 14 hex chars (lowercase)
+                return hash.ToString("x14"); // Always 14 hex chars (lowercase)
+            }
+        }
+        catch (MagickException)
+        {
+            throw new ArgumentException("Parameter is not valid.");
         }
     }
 

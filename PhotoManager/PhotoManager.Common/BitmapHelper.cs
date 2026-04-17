@@ -80,7 +80,7 @@ public static class BitmapHelper
             (width, height) = CalculateRotatedDimensions(magickImage.Width, magickImage.Height, width, height);
             magickImage.Resize((uint)width, (uint)height);
             byte[] imageData = magickImage.ToByteArray(MagickFormat.Bmp);
-            return new ImageInfo(imageData, width, height, rotation);
+            return new ImageInfo(imageData, (int)magickImage.Width, (int)magickImage.Height, rotation);
         }
         catch (Exception ex) when (ex is not ArgumentException and not ArgumentNullException and not OverflowException)
         {
@@ -142,7 +142,7 @@ public static class BitmapHelper
             (width, height) = CalculateRotatedDimensions(magickImage.Width, magickImage.Height, width, height);
             magickImage.Resize((uint)width, (uint)height);
             byte[] imageData = magickImage.ToByteArray(MagickFormat.Bmp);
-            return new ImageInfo(imageData, width, height, rotation);
+            return new ImageInfo(imageData, (int)magickImage.Width, (int)magickImage.Height, rotation);
         }
         catch (ArgumentException)
         {
@@ -216,7 +216,7 @@ public static class BitmapHelper
             (width, height) = CalculateDimensions(magickImage.Width, magickImage.Height, width, height);
             magickImage.Resize((uint)width, (uint)height);
             byte[] imageData = magickImage.ToByteArray(MagickFormat.Bmp);
-            return new ImageInfo(imageData, width, height, ImageRotation.Rotate0);
+            return new ImageInfo(imageData, (int)magickImage.Width, (int)magickImage.Height, ImageRotation.Rotate0);
         }
         catch (Exception ex) when (ex is not ArgumentException and not ArgumentNullException and not OverflowException)
         {
