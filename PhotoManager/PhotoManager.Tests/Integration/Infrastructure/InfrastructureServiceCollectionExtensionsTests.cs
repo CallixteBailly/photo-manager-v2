@@ -56,7 +56,7 @@ public class InfrastructureServiceCollectionExtensionsTests
 
         services.AddInfrastructure();
 
-        Assert.That(services, Has.Count.EqualTo(11));
+        Assert.That(services, Has.Count.EqualTo(14));
 
         objectListStorageDescriptor = services.FirstOrDefault(x => x.ServiceType == typeof(IObjectListStorage));
         Assert.That(objectListStorageDescriptor, Is.Not.Null);

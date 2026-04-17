@@ -81,11 +81,11 @@ public class AssetRepository : IAssetRepository
                             if (Thumbnails.TryGetValue(folder.Path, out Dictionary<string, byte[]>? thumbnail)
                                 && thumbnail.TryGetValue(asset.FileName, out byte[]? buffer))
                             {
-                                ImageInfo imageInfo = _imageProcessingService.LoadThumbnailImage(
+                                ImageInfo? imageInfo = _imageProcessingService.LoadThumbnailImage(
                                     buffer,
                                     asset.Pixel.Thumbnail.Width,
                                     asset.Pixel.Thumbnail.Height);
-                                asset.ImageData = imageInfo.Data;
+                                asset.ImageData = imageInfo?.Data;
                             }
                         }
 
@@ -448,8 +448,8 @@ public class AssetRepository : IAssetRepository
                 if (Thumbnails.TryGetValue(directoryName, out Dictionary<string, byte[]>? thumbnail)
                     && thumbnail.TryGetValue(fileName, out byte[]? buffer))
                 {
-                    ImageInfo imageInfo = _imageProcessingService.LoadThumbnailImage(buffer, width, height);
-                    result = imageInfo.Data;
+                    ImageInfo? imageInfo = _imageProcessingService.LoadThumbnailImage(buffer, width, height);
+                    result = imageInfo?.Data;
                 }
                 else
                 {

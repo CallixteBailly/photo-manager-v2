@@ -104,7 +104,7 @@ public class AppTests
 
         ConfigureServices(services);
 
-        Assert.That(services, Has.Count.EqualTo(21));
+        Assert.That(services, Has.Count.EqualTo(24));
 
         // appsettings.json
         configurationRootDescriptor = services.FirstOrDefault(x => x.ServiceType == typeof(IConfigurationRoot));

@@ -108,9 +108,11 @@ public static class ExifHelper
 
             return true;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            logger.LogError(ex, "{ExMessage}", ex.Message);
+            NotSupportedException exception =
+                new("No imaging component suitable to complete this operation was found.");
+            logger.LogError(exception, "{ExMessage}", exception.Message);
             return false;
         }
     }
