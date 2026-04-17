@@ -6,6 +6,32 @@ namespace PhotoManager.Common;
 public static class BitmapHelper
 {
     // From CatalogAssetsService for CreateAsset() to get the originalImage
+    /// <summary>
+    /// Mimics WPF DecodePixelWidth/DecodePixelHeight behavior:
+    /// when one dimension is 0, it is calculated from the other preserving aspect ratio.
+    /// When both are 0, original dimensions are used.
+    /// </summary>
+    private static (int width, int height) CalculateDimensions(uint imageWidth, uint imageHeight, int width, int height)
+    {
+        if (width <= 0 && height <= 0)
+        {
+            return ((int)imageWidth, (int)imageHeight);
+        }
+
+        if (width <= 0)
+        {
+            float percentage = height * 100f / imageHeight;
+            width = Convert.ToInt32(percentage * imageWidth / 100);
+        }
+        else if (height <= 0)
+        {
+            float percentage = width * 100f / imageWidth;
+            height = Convert.ToInt32(percentage * imageHeight / 100);
+        }
+
+        return (width, height);
+    }
+
     public static ImageInfo LoadOriginalImage(byte[] buffer, ImageRotation rotation, ILogger logger)
     {
         try
@@ -135,6 +161,7 @@ public static class BitmapHelper
         try
         {
             using MagickImage magickImage = new(buffer);
+            (width, height) = CalculateDimensions(magickImage.Width, magickImage.Height, width, height);
             magickImage.Resize((uint)width, (uint)height);
             byte[] imageData = magickImage.ToByteArray(MagickFormat.Bmp);
             return new ImageInfo(imageData, width, height, ImageRotation.Rotate0);
