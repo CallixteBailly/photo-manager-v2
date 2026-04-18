@@ -26,9 +26,11 @@ public static class ExifHelper
         catch (Exception ex)
         {
             // MagickException for corrupted images
-            if (ex is MagickException)
+            if (ex is MagickException or ArgumentException)
             {
-                logger.LogError("The image is corrupted");
+                NotSupportedException exception =
+                    new("No imaging component suitable to complete this operation was found.");
+                logger.LogError(exception, "{ExMessage}", exception.Message);
             }
             else
             {

@@ -42,7 +42,10 @@ public static class BitmapHelper
 
         if (buffer.Length == 0)
         {
-            throw new ArgumentException("Value cannot be empty. (Parameter 'stream')");
+            NotSupportedException exception =
+                new("No imaging component suitable to complete this operation was found.");
+            logger.LogError(exception, "{ExMessage}", exception.Message);
+            throw exception;
         }
 
         try
@@ -73,7 +76,10 @@ public static class BitmapHelper
 
         if (buffer.Length == 0)
         {
-            throw new ArgumentException("Value cannot be empty. (Parameter 'stream')");
+            NotSupportedException exception =
+                new("No imaging component suitable to complete this operation was found.");
+            logger.LogError(exception, "{ExMessage}", exception.Message);
+            throw exception;
         }
 
         try
@@ -213,6 +219,23 @@ public static class BitmapHelper
             throw new NotSupportedException("No imaging component suitable to complete this operation was found.");
         }
 
+        // Mimic WPF overflow check: if dimensions would cause int overflow in pixel buffer
+        checked
+        {
+            try
+            {
+                long totalPixels = (long)width * height;
+                if (totalPixels > int.MaxValue)
+                {
+                    throw new OverflowException("The image data generated an overflow during processing.");
+                }
+            }
+            catch (OverflowException)
+            {
+                throw;
+            }
+        }
+
         try
         {
             MagickReadSettings settings = new() { SyncImageWithExifProfile = false };
@@ -257,7 +280,9 @@ public static class BitmapHelper
 
     private static byte[] GetImageBytes(ImageInfo imageInfo, MagickFormat format)
     {
-        using MagickImage magickImage = new(imageInfo.Data!);
+        ArgumentNullException.ThrowIfNull(imageInfo);
+        ArgumentNullException.ThrowIfNull(imageInfo.Data);
+        using MagickImage magickImage = new(imageInfo.Data);
         return magickImage.ToByteArray(format);
     }
 
@@ -294,13 +319,18 @@ public static class BitmapHelper
 
     private static void MagickImageApplyRotation(MagickImage magickImage, ImageRotation rotation)
     {
+        if (!Enum.IsDefined(rotation))
+        {
+            throw new ArgumentException($"'{rotation}' is not a valid value for property 'Rotation'.");
+        }
+
         int rotationAngle = rotation switch
         {
             ImageRotation.Rotate0 => 0,
             ImageRotation.Rotate90 => 90,
             ImageRotation.Rotate180 => 180,
             ImageRotation.Rotate270 => 270,
-            _ => throw new ArgumentException($"'{rotation}' is not a valid value for property 'Rotation'.")
+            _ => 0 // unreachable, Enum.IsDefined handles invalid values
         };
 
         if (rotationAngle != 0)

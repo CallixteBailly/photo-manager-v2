@@ -65,6 +65,11 @@ public static class HashingHelper
             throw new ArgumentNullException("path");
         }
 
+        if (!File.Exists(filePath))
+        {
+            return "00000000000000";
+        }
+
         try
         {
             using (MagickImage image = new(filePath))

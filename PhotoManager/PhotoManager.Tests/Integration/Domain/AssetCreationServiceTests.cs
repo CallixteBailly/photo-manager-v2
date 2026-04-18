@@ -1903,9 +1903,9 @@ public class AssetCreationServiceTests
             Assert.That(assetsFromRepository, Is.Empty);
             Assert.That(thumbnails, Is.Empty);
 
-            InvalidOperationException invalidOperationException =
-                new("Operation is not valid due to the current state of the object.");
-            _logger!.AssertLogExceptions([invalidOperationException], typeof(AssetCreationService));
+            ArgumentNullException argumentNullException =
+                new("data", "Value cannot be null. (Parameter 'data')");
+            _logger!.AssertLogExceptions([argumentNullException], typeof(AssetCreationService));
         }
         finally
         {
@@ -1944,9 +1944,9 @@ public class AssetCreationServiceTests
             Assert.That(assetsFromRepository, Is.Empty);
             Assert.That(thumbnails, Is.Empty);
 
-            InvalidOperationException invalidOperationException =
-                new("Operation is not valid due to the current state of the object.");
-            _logger!.AssertLogExceptions([invalidOperationException], typeof(AssetCreationService));
+            ArgumentNullException argumentNullException =
+                new("data", "Value cannot be null. (Parameter 'data')");
+            _logger!.AssertLogExceptions([argumentNullException], typeof(AssetCreationService));
         }
         finally
         {
