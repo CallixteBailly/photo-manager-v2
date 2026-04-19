@@ -1,0 +1,16 @@
+global using Avalonia;
+global using Avalonia.Controls;
+global using Avalonia.Controls.ApplicationLifetimes;
+global using Avalonia.Markup.Xaml;
+global using Microsoft.Extensions.Configuration;
+global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.Extensions.Logging;
+global using PhotoManager.Application;
+global using PhotoManager.Common;
+global using PhotoManager.Domain;
+global using System;
+global using System.Collections.Generic;
+global using System.IO;
+global using System.Linq;
+global using System.Threading;
+global using System.Threading.Tasks;

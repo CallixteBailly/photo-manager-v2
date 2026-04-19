@@ -1,0 +1,50 @@
+using System.Collections.ObjectModel;
+
+namespace PhotoManager.UI.Avalonia.ViewModels;
+
+public class FolderNavigationViewModel(
+    ApplicationViewModel applicationViewModel,
+    Folder sourceFolder,
+    List<string> recentTargetPaths)
+    : BaseViewModel
+{
+    public ApplicationViewModel ApplicationViewModel { get; } = applicationViewModel;
+
+    public Folder SourceFolder { get; } = sourceFolder;
+
+    public Folder? SelectedFolder => !string.IsNullOrWhiteSpace(TargetPath)
+        ? new() { Id = Guid.NewGuid(), Path = TargetPath }
+        : null;
+
+    public Folder? LastSelectedFolder => ApplicationViewModel.MoveAssetsLastSelectedFolder;
+
+    public bool CanConfirm
+    {
+        get
+        {
+            if (SelectedFolder == null)
+            {
+                return false;
+            }
+
+            string sourceFolderPathFormatted =
+                SourceFolder.Path.EndsWith('\\') ? SourceFolder.Path[..^1] : SourceFolder.Path;
+
+            return sourceFolderPathFormatted != SelectedFolder.Path;
+        }
+    }
+
+    public bool HasConfirmed { get; set; }
+
+    public ObservableCollection<string> RecentTargetPaths { get; private set; } = [.. recentTargetPaths];
+
+    public string? TargetPath
+    {
+        get;
+        set
+        {
+            field = !string.IsNullOrWhiteSpace(value) && value.EndsWith('\\') ? value[..^1] : value;
+            NotifyPropertyChanged(nameof(TargetPath), nameof(SelectedFolder), nameof(CanConfirm));
+        }
+    }
+}

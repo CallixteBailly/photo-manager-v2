@@ -1,0 +1,15 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="PhotoManager.UI.Avalonia.Windows.SyncAssetsWindow"
+        Title="Sync Assets"
+        Width="800"
+        Height="600"
+        WindowStartupLocation="CenterOwner">
+
+    <Grid Margin="10">
+        <TextBlock Text="Sync Assets - Coming Soon"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   FontSize="18" />
+    </Grid>
+</Window>

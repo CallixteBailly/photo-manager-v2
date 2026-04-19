@@ -1,0 +1,15 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="PhotoManager.UI.Avalonia.Windows.FolderNavigationWindow"
+        Title="Select Folder"
+        Width="500"
+        Height="400"
+        WindowStartupLocation="CenterOwner">
+
+    <Grid Margin="10">
+        <TextBlock Text="Folder Navigation - Coming Soon"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   FontSize="18" />
+    </Grid>
+</Window>

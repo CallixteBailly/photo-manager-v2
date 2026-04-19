@@ -75,7 +75,7 @@ public static class VideoHelper
 
             if (!File.Exists(firstFrameVideoPath))
             {
-                throw new FileFormatException(
+                throw new InvalidOperationException(
                     "FFmpeg failed to generate the first frame file due to its format or content.");
             }
 

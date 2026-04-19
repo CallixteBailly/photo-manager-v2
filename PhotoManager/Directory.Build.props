@@ -1,9 +1,18 @@
 <Project>
   <PropertyGroup>
-    <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
+    <!-- Shared library projects target both Windows (for WPF UI) and plain .NET (for Avalonia UI) -->
+    <TargetFrameworks Condition="'$(MSBuildProjectName)' != 'PhotoManager.UI' And '$(MSBuildProjectName)' != 'PhotoManager.UI.Avalonia' And '$(MSBuildProjectName)' != 'PhotoManager.Tests' And '$(MSBuildProjectName)' != 'PhotoManager.Benchmarks'">net10.0;net10.0-windows10.0.26100.0</TargetFrameworks>
+    <!-- WPF UI project: Windows only -->
+    <TargetFramework Condition="'$(MSBuildProjectName)' == 'PhotoManager.UI'">net10.0-windows10.0.26100.0</TargetFramework>
+    <!-- Avalonia UI project: cross-platform -->
+    <TargetFramework Condition="'$(MSBuildProjectName)' == 'PhotoManager.UI.Avalonia'">net10.0</TargetFramework>
+    <!-- Tests and Benchmarks: Windows only (for now) -->
+    <TargetFramework Condition="'$(MSBuildProjectName)' == 'PhotoManager.Tests'">net10.0-windows10.0.26100.0</TargetFramework>
+    <TargetFramework Condition="'$(MSBuildProjectName)' == 'PhotoManager.Benchmarks'">net10.0-windows10.0.26100.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <UseWPF>true</UseWPF>
+    <!-- UseWPF only for Windows-only projects -->
+    <UseWPF Condition="'$(MSBuildProjectName)' == 'PhotoManager.UI' Or '$(MSBuildProjectName)' == 'PhotoManager.Tests' Or '$(MSBuildProjectName)' == 'PhotoManager.Benchmarks'">true</UseWPF>
     <AssemblyVersion>1.8.0.0</AssemblyVersion>
     <FileVersion>1.8.0.0</FileVersion>
     <InformationalVersion>1.8.0</InformationalVersion>
@@ -16,6 +25,8 @@
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);AD0001;NU1901;NU1902;NU1903</NoWarn>
+    <!-- Enable building Windows-targeting projects on Linux/macOS for cross-platform development -->
+    <EnableWindowsTargeting Condition="'$(EnableWindowsTargeting)' == '' And '$(OS)' != 'Windows_NT'">true</EnableWindowsTargeting>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

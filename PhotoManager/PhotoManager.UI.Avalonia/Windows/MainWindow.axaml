@@ -1,0 +1,35 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:PhotoManager.UI.Avalonia.ViewModels"
+        x:Class="PhotoManager.UI.Avalonia.Windows.MainWindow"
+        x:DataType="vm:ApplicationViewModel"
+        Title="{Binding AppTitle}"
+        Width="800"
+        Height="600"
+        Background="Black"
+        Foreground="White"
+        WindowState="Maximized">
+
+    <Design.DataContext>
+        <vm:ApplicationViewModel />
+    </Design.DataContext>
+
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_File">
+                <MenuItem Header="E_xit" />
+            </MenuItem>
+            <MenuItem Header="_Help">
+                <MenuItem Header="About PhotoManager..." />
+            </MenuItem>
+        </Menu>
+
+        <Grid>
+            <TextBlock Text="PhotoManager Avalonia UI - Coming Soon"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       FontSize="24"
+                       Foreground="White" />
+        </Grid>
+    </DockPanel>
+</Window>
